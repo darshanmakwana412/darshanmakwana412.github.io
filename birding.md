@@ -85,6 +85,15 @@ order: 7
       </figure>
     </td>
   </tr>
+
+  <tr>
+    <td>
+      <figure>
+        <img src="{{ site.url }}/img/birding/asian_bee_eater.png" alt="Asian Bee Eater" />
+        <figcaption>Asian Bee Eater</figcaption>
+      </figure>
+    </td>
+  </tr>
 </table>
 
 <!-- ---
