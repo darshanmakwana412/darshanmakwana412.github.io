@@ -11,6 +11,34 @@ order: 7
 </style>
 
 <table>
+  {% for image in site.data.birding.images %}
+  {% assign filename = image | append: ".png" %}
+  {% assign caption = image | replace: "_", " " | capitalize %}
+  <tr>
+    <td>
+      <figure>
+        <img src="{{ site.url }}/img/birding/{{ filename }}" alt="{{ caption }}">
+        <figcaption>{{ caption }}</figcaption>
+      </figure>
+    </td>
+    {% cycle "", "</tr><tr>" %}
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- ---
+layout: page
+title: Birding
+order: 7
+---
+
+<style>
+  figcaption {
+    text-align: center;
+  }
+</style>
+
+<table>
   <tr>
     <td>
       <figure>
@@ -100,7 +128,7 @@ order: 7
       </figure>
     </td>
   </tr>
-</table>
+</table> -->
 
 <!-- ---
 layout: page
