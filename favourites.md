@@ -15,7 +15,7 @@ The righteous minds - Jonathan Haidt
 
 **Music**
 
-The Score
-Linkin Park
-Cage the Elephant
-Gipsy Kings
+The Score\
+Linkin Park\
+Cage the Elephant\
+Gipsy Kings\
