@@ -93,6 +93,12 @@ order: 7
         <figcaption>Asian Bee Eater</figcaption>
       </figure>
     </td>
+    <td>
+      <figure>
+        <img src="{{ site.url }}/img/birding/oriental_magpie_robin.png" alt="Oriental Magpie Robin" />
+        <figcaption>Oriental Magpie Robin</figcaption>
+      </figure>
+    </td>
   </tr>
 </table>
 
