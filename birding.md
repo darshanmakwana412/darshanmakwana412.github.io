@@ -9,8 +9,8 @@ order: 7
     text-align: center;
     font-size: 1rem;
   }
-  
-  .scientific-name {
+
+  .name {
     font-weight: bold;
   }
 </style>
@@ -25,7 +25,7 @@ order: 7
       <figure>
         <img src="{{ site.url }}/img/birding/{{ filename }}" alt="{{ caption }}">
         <figcaption>
-          {{ caption }}
+          <span class="name"><em>{{ caption }}</em></span>
           (<span class="scientific-name"><em>{{ scientific_name }}</em></span>)
         </figcaption>
       </figure>

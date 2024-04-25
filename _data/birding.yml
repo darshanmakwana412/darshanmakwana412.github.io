@@ -1,4 +1,6 @@
 images:
+  - name: orange_minivet
+    scientific_name: Pericrocotus flammeus
   - name: golden_eagle
     scientific_name: Aquila chrysaetos
   - name: asian_bee_eater
