@@ -1,6 +1,10 @@
 images:
+  - name: indian_golden_oriole
+    scientific_name: Oriolus kundoo
   - name: orange_minivet
     scientific_name: Pericrocotus flammeus
+  - name: oriental_magpie_robin
+    scientific_name: Copsychus saularis
   - name: golden_eagle
     scientific_name: Aquila chrysaetos
   - name: asian_bee_eater
@@ -17,8 +21,6 @@ images:
     scientific_name: Psittaciformes
   - name: bank_mayna
     scientific_name: Acridotheres ginginianus
-  - name: oriental_magpie_robin
-    scientific_name: Copsychus saularis
   - name: woodpecker
     scientific_name: Picidae
   - name: kingfisher
