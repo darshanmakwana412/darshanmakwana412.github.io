@@ -5,7 +5,7 @@
 layout: page
 ---
 
-![Darshan Makwana](./img/people/darshan_face.jpeg){: style="float: right; margin: 0px 20px; width: 250px;" name="darshan"}
+![Darshan Makwana](./img/people/darshan_cool.png){: style="float: right; margin: 0px 20px; width: 350px;" name="darshan"}
 
 My name is Darshan Makwana, I am a 3rd year UG student at [IIT Bombay](https://en.wikipedia.org/wiki/IIT_Bombay). I will be joining [Sprinklr](https://www.sprinklr.com/) this summer as an AI product intern
 
