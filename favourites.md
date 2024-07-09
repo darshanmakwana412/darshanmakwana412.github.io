@@ -8,11 +8,12 @@ Here is a non exhaustive list of some of my all time favourites. There is also t
 
 **Books**
 
+- Reality is not what it seems: A journey to quantum gravity - Carlo Rovelli (**Currently Reading**)
 - Fahrenheit 451 - Ray Bradbury
 - One hundred years of solitude - Gabriel García Márquez
 - Atomic Habits - James Clear
 - The righteous minds - Jonathan Haidt
-- Fooled by Randomness - Nassim Taleb (**Currently Reading**)
+- Fooled by Randomness - Nassim Taleb
 
 **Music**
 
