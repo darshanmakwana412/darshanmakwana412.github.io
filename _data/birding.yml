@@ -1,4 +1,6 @@
 images:
+  - name: great_hornbill
+    scientific_name: Buceros bicornis
   - name: indian_golden_oriole
     scientific_name: Oriolus kundoo
   - name: orange_minivet
