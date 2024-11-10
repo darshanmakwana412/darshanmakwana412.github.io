@@ -216,6 +216,6 @@ This plot reveals that women generally end up with less optimal partners compare
 
 ## Conclusion
 
-The Gale-Shapley algorithm consistently finds stable matchings in $$O(n^2)$$ time, making it computationally efficient even for large datasets. The proposal dynamics show that the number of free men decreases steadily with each round of proposals, ensuring rapid convergence to a stable matching.
+The Gale-Shapley algorithm consistently finds stable matchings in O(n^2) time, making it computationally efficient even for large datasets. The proposal dynamics show that the number of free men decreases steadily with each round of proposals, ensuring rapid convergence to a stable matching.
 
 While the algorithm guarantees stability, it introduces a bias in favor of the proposing group. Men (the proposers) always receive their best possible matches, while women (the receivers) are left with less optimal matches. This asymmetry has implications in real-world scenarios, such as medical residency assignments or college admissions, where fairness and equity are important considerations.

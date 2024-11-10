@@ -37,7 +37,13 @@
             <br>
             Git Commit SHA
             <br>
-            {{ site.github.build_revision }}
+            <div style="margin-left: -80px;">
+            {% if site.github.build_revision %}
+                {{ site.github.build_revision }}
+            {% else %}
+                f6a84c5efc72c2c77cec71ffcb9241d3f8b61506
+            {% endif %}
+            </div>
         </div>
         
         
