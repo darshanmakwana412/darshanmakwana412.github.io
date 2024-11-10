@@ -23,8 +23,8 @@ Email ID: [darshanmakwana412@gmail.com](mailto:darshanmakwana412@gmail.com)
 <col width="100px">
 <col width="650px">
 <tr><td><b>Oct 2024:</b></td><td>Have been selected for semester exchange at <a href="https://www.aalto.fi/en/school-of-science">Aalto school of science, Finland</a></td></tr>
-<tr><td><b>Aug 2024:</b></td><td>received Pre Placement Offer (PPO) from <a href="https://www.sprinklr.com/">sprinklr</a> in their AI research team</td></tr>
-<tr><td><b>July 2024:</b></td><td>my summer internship experience at <a href="https://www.sprinklr.com/">sprinklr</a> is available at <a href="https://summerblog.insightiitb.org/darshan-makwana-sprinklr/">Insight Summer Blog</a></td></tr>
+<tr><td><b>Sep 2024:</b></td><td>received Pre Placement Offer (PPO) from <a href="https://www.sprinklr.com/">sprinklr</a> in their AI research team</td></tr>
+<tr><td><b>Aug 2024:</b></td><td>my summer internship experience at <a href="https://www.sprinklr.com/">sprinklr</a> is available at <a href="https://summerblog.insightiitb.org/darshan-makwana-sprinklr/">Insight Summer Blog</a></td></tr>
 <tr><td><b>May 2024:</b></td><td>started internship at <a href="https://www.sprinklr.com/">sprinklr</a> AI voice team training audio language models</td></tr>
 <tr><td><b>Feb 2024:</b></td><td>leaving <a href="https://www.sprinklr.com/">Hexo AI</a> after an amazing 1 year spent on solving extremly hard problems</td></tr>
 <tr><td><b>Jan 2024:</b></td><td>started my SLP on federated learning under <a href="https://sites.google.com/view/avishekghosh/home">Avishek Ghosh</a> and <a href="https://www.me.iitb.ac.in/faculty/prof-alankar-alankar">Alankar Alankar</a></td></tr>

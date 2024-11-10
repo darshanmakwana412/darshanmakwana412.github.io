@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Projects
-order: 6
+order: 4
 ---
 
 <style>
