@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const navbarRect = link.parentElement.getBoundingClientRect();
         if (initialRender || activeLink ===  null) {
             hoverHighlight.style.transition = null;
-            initialRender = false;
+            // initialRender = false;
         } else {
             hoverHighlight.style.transition = "all 0.5s ease";
         }
