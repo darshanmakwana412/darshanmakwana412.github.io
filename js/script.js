@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         link.addEventListener("mouseenter", () => {
             moveHighlight(link);
         });
-        if (link.href === window.location.href) {
+        if (window.location.href.includes(link.href.slice(0, -5))) {
             activeLink = link;
             moveHighlight(activeLink);
         }
