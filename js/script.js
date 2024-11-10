@@ -2,16 +2,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const hoverHighlight = document.getElementById("hoverHighlight");
     const links = document.querySelectorAll(".trigger .page-link");
     let activeLink = null;
+    let initialRender = true;
     let dw = 15;
     let dh = 15;
-    let initialRender = true;
 
     function moveHighlight(link) {
         const linkRect = link.getBoundingClientRect();
         const navbarRect = link.parentElement.getBoundingClientRect();
         if (initialRender || activeLink ===  null) {
             hoverHighlight.style.transition = null;
-            // initialRender = false;
+            initialRender = false;
         } else {
             hoverHighlight.style.transition = "all 0.5s ease";
         }
@@ -29,6 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
             activeLink = link;
             moveHighlight(activeLink);
         }
+        link.addEventListener("click", () => {
+          activeLink = link;
+          initialRender = true;
+          moveHighlight(activeLink);
+        });
     });
 
     document.querySelector(".trigger").addEventListener("mouseleave", () => {
