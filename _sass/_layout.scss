@@ -17,11 +17,39 @@
     letter-spacing: -1px;
     margin-bottom: 0;
     float: left;
+    font-weight: bold;
 
     &,
     &:visited {
         color: $grey-color-dark;
     }
+}
+
+.site-title:hover {
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 56px;
+    letter-spacing: -1px;
+    margin-bottom: 0;
+    text-decoration: underline;
+    font-weight: bold;
+    float: left;
+
+    &,
+    &:visited {
+        color: $grey-color-dark;
+    }
+}
+
+.hover-highlight {
+    position: absolute;
+    background-color: #b9b9b9;
+    height: 0px;
+    width: 0px;
+    border-radius: 8px;
+    z-index: -1;
+    margin-left: 0;
+    opacity: 0.7;
 }
 
 .site-nav {

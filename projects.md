@@ -48,6 +48,19 @@ body {
 </style>
 
 <div class="project">
+<img class="project-image" src="./img/projects/mvs.gif" alt="Bridge Optimization">
+<div class="project-details">
+    <div class="project-title">Multi View Reconstruction</div>
+    <div class="project-authors">Reconstructing 3d objects from images by applying volumetric graph cut on visual hulls followed by ray casting for shading
+</div>
+    <div class="project-links">
+    <a href="https://github.com/darshanmakwana412/Multi_View_Reconstruction/blob/main/report.pdf">[Report]</a>
+    <a href="https://github.com/darshanmakwana412/Multi_View_Reconstruction">[Code]</a>
+    </div>
+</div>
+</div>
+
+<div class="project">
 <img class="project-image" src="./img/projects/struct_optim.gif" alt="Bridge Optimization">
 <div class="project-details">
     <div class="project-title">Struct Optim</div>

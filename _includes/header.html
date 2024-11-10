@@ -14,6 +14,8 @@
       </a>
 
       <div class="trigger">
+        <div class="hover-highlight" id="hoverHighlight"></div>
+        <a class="page-link" href="{{ site.url }}">Home</a>
         {% assign sorted_pages = site.pages | sort:"order" %}
         {% for my_page in sorted_pages %}
           {% if my_page.title %}
