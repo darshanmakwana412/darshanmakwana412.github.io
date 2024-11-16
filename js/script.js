@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("load", () => {
     const hoverHighlight = document.getElementById("hoverHighlight");
     const links = document.querySelectorAll(".trigger .page-link");
     let activeLink = null;
@@ -22,17 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     links.forEach(link => {
+        if (window.location.href.includes(link.href.slice(0, -5))) {
+          activeLink = link;
+        }
         link.addEventListener("mouseenter", () => {
             moveHighlight(link);
         });
-        if (window.location.href.includes(link.href.slice(0, -5))) {
-            activeLink = link;
-            moveHighlight(activeLink);
-        }
         link.addEventListener("click", () => {
-          activeLink = link;
           initialRender = true;
-          moveHighlight(activeLink);
         });
     });
 
