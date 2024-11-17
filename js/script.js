@@ -1,4 +1,4 @@
-document.addEventListener("load", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const hoverHighlight = document.getElementById("hoverHighlight");
     const links = document.querySelectorAll(".trigger .page-link");
     let activeLink = null;
@@ -22,14 +22,24 @@ document.addEventListener("load", () => {
     }
 
     links.forEach(link => {
-        if (window.location.href.includes(link.href.slice(0, -5))) {
+        let ctx = link.href.split("/").at(-1);
+        if (ctx !== '') {
+          if (window.location.href.includes(ctx.slice(0, -5))) {
+            activeLink = link;
+            moveHighlight(activeLink);
+          }
+        } else {
           activeLink = link;
+          // moveHighlight(activeLink);
         }
+        console.log(ctx, ctx !== '');
         link.addEventListener("mouseenter", () => {
             moveHighlight(link);
         });
         link.addEventListener("click", () => {
           initialRender = true;
+          activeLink = link;
+          moveHighlight(activeLink);
         });
     });
 
@@ -41,5 +51,7 @@ document.addEventListener("load", () => {
         hoverHighlight.style.height = "0px";
       }
     });
+
+    moveHighlight(activeLink);
 
   });
