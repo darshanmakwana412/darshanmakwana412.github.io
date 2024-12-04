@@ -30,6 +30,7 @@ Email ID: [darshanmakwana412@gmail.com](mailto:darshanmakwana412@gmail.com)
 <tr><td><b>Jan 2024:</b></td><td>started my SLP on federated learning under <a href="https://sites.google.com/view/avishekghosh/home">Avishek Ghosh</a> and <a href="https://www.me.iitb.ac.in/faculty/prof-alankar-alankar">Alankar Alankar</a></td></tr>
 <tr><td><b>May 2023:</b></td><td>started my summer research internship under <a href="https://rtsl.cps.mw.tum.de/personal_page/mcaccamo/">Marco Caccamo</a> at <a href="https://www.tum.de/">TUM, Germany</a> for robust quadruped robot control</td></tr>
 <tr><td><b>Feb 2023:</b></td><td>started internship at <a href="https://www.sprinklr.com/">Hexo AI</a> for training diffusion models on product photography</td></tr>
+<tr><td><b>Dec 2022:</b></td><td>Presented a paper on <a href="https://docs.google.com/presentation/d/1a4OrFQlG5u-ZoXtqpk_AbPio6-ojA2yfQcK787jJuJI/edit?usp=sharing">Efficient Graph based Image Segmentation</a> at <a href="https://www.linkedin.com/company/dav-team-iit-bombay/?originalSubdomain=in">DAV</a></td></tr>
 <tr><td><b>Jul 2022:</b></td><td>Our system description paper for <a href="https://www.semanticscholar.org/paper/Shayona%40SMM4H-23%3A-COVID-19-Self-diagnosis-using-and-Chavda-Makwana/f16292e2e210bb8681d796fe46c47ffda1df6360">COVID-19 Self diagnosis classification using BERT and LightGBM</a> has been accepted to SMM4H2023</td></tr>
 </table>
 </div>
