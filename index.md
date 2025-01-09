@@ -5,7 +5,7 @@
 layout: page
 ---
 
-![Darshan Makwana](./img/people/darshan.png){: style="float: right; margin: 0px 20px; width: 300px;" name="darshan"}
+![Darshan Makwana](./img/people/darshan_jog.png){: style="float: right; margin: 0px 20px; width: 300px;" name="darshan"}
 
 My name is Darshan Makwana, I am a 4th year UG student at [IIT Bombay](https://en.wikipedia.org/wiki/IIT_Bombay). I have a vivid taste of hobbies which includes origami, birding and deep learning
 
