@@ -48,6 +48,17 @@ body {
 </style>
 
 <div class="project">
+<img class="project-image" src="./img/projects/toucan.gif" alt="Optimizing Toucan" width=400>
+<div class="project-details">
+    <div class="project-title">Minimal 2D Gaussian Splatting</div>
+    <div class="project-authors">Implimentation of the original gaussian splatting paper for 2D images using tile based differential rasterization leveraging triton kernels</div>
+    <div class="project-links">
+    <a href="https://github.com/darshanmakwana412/mings">[Code]</a>
+    </div>
+</div>
+</div>
+
+<div class="project">
 <img class="project-image" src="./img/projects/mvs.gif" alt="Bridge Optimization">
 <div class="project-details">
     <div class="project-title">Multi View Reconstruction</div>

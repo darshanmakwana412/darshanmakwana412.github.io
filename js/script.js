@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
           activeLink = link;
           // moveHighlight(activeLink);
         }
-        console.log(ctx, ctx !== '');
         link.addEventListener("mouseenter", () => {
             moveHighlight(link);
         });
