@@ -37,11 +37,11 @@
             <!-- <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdarshanmakwana412.github.io&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=VIEWS&edge_flat=true"/></a> -->
             Git Commit SHA
             <br>
-            <div style="margin-left: -80px;">
+            <div style="margin-left: 40px;">
             {% if site.github.build_revision %}
-                {{ site.github.build_revision }}
+                {{ site.github.build_revision | slice: 0, 6 }}
             {% else %}
-                f6a84c5efc72c2c77cec71ffcb9241d3f8b61506
+                {{ "f6a84c5efc72c2c77cec71ffcb9241d3f8b61506" | slice: 0, 6 }}
             {% endif %}
             </div>
         </div>
