@@ -7,7 +7,7 @@ layout: page
 
 ![Darshan Makwana](./img/people/darshan_jog.png){: style="float: right; margin: 0px 20px; width: 300px;" name="darshan"}
 
-My name is Darshan Makwana, I am a 4th year UG student at [IIT Bombay](https://en.wikipedia.org/wiki/IIT_Bombay) pursuing BTech in Mechanical Engineering. I have a vivid taste of hobbies which includes origami, birding and deep learning
+My name is Darshan Makwana, I am a 4th year UG student at [IIT Bombay](https://en.wikipedia.org/wiki/IIT_Bombay) pursuing BTech in Mechanical Engineering. I have a vivid taste of hobbies which includes birding and deep learning
 
 I spent my summer in training audio language models for speech transcription, word boosting and NER at [Sprinklr](https://www.sprinklr.com/).
 Previously I did my research internship at [TUM](https://www.tum.de/en/) during Summer of 2023 working on [quadruped robotics](https://www.notion.so/System-Identification-and-Model-Based-Deep-Reinforcement-Learning-for-Agile-and-Robust-Quadruped-Rob-d64a6f1dd4434a18b57f3c60cdb16fe3?pvs=4) under [Prof Marco Caccamo](https://rtsl.cps.mw.tum.de/personal_page/mcaccamo/). I also interned at [Hexo AI](https://www.hexo.ai/) wherein I got a chance to work on some of the cool [diffusion models](https://en.wikipedia.org/wiki/Diffusion_model#:~:text=A%20diffusion%20model%20consists%20of,distribution%20of%20a%20given%20dataset.) and [llms](https://en.wikipedia.org/wiki/Large_language_model) out there
@@ -22,6 +22,7 @@ Email ID: [darshanmakwana412@gmail.com](mailto:darshanmakwana412@gmail.com)
 <table>
 <col width="100px">
 <col width="650px">
+<tr><td><b>Jan 2025:</b></td><td>Starting as a Research Assistant at <a href="https://interiit-tech.com/problem-statement/">Aalto Vision</a> Group</td></tr>
 <tr><td><b>Dec 2024:</b></td><td>Lead a team of extremely smart and hardworking people for Inter IIT PS on <a href="https://interiit-tech.com/problem-statement/">fake image detection and artifacts identification challenge</a> by Adobe Research</td></tr>
 <tr><td><b>Oct 2024:</b></td><td>Have been selected for semester exchange at <a href="https://www.aalto.fi/en/school-of-science">Aalto school of science, Finland</a></td></tr>
 <tr><td><b>Sep 2024:</b></td><td>received Pre Placement Offer (PPO) from <a href="https://www.sprinklr.com/">sprinklr</a> in their AI research team</td></tr>
