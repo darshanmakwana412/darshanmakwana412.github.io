@@ -3,7 +3,37 @@
 ---
 @charset "utf-8";
 
-
+/* Container that holds controls on the left and canvas on the right */
+.container {
+    display: flex;              /* Puts .controls and canvas side by side */
+    align-items: flex-start;    /* Aligns items at the top */
+    gap: 2rem;                  /* Spacing between controls and canvas */
+  }
+  
+  /* Use a grid layout for controls to put two .control-group per row */
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1rem;                  /* Space between columns and rows */
+    max-width: 600px;
+  }
+  
+  /* Each control group stacks its label, slider, and value vertically */
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+  
+  input[type="range"] {
+    width: 150px;
+  }
+  
 
 // Our variables
 $base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
