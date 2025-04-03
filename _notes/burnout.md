@@ -6,6 +6,8 @@ tags: thoughts
 mathjax: True
 ---
 
+![burnout](./../img/notes/burnout.png){: style="float: right; margin: 0px 10px; width: 300px;" name="burnout"}
+
 People tend to approach challenges in one of two ways: either they adapt and keep moving, or they resist and overthink every step. The first approach embraces uncertainty, adjusts to difficulties, and stays present. The second fights against every obstacle, replays past mistakes, and fears future problems. The difference between these mindsets isn’t just about endurance it’s about maintaining sanity and actually enjoying the journey and more importantly, it explains why some people burn out faster than others
 
 Burnout isn’t just about workload. Two people can have the same responsibilities, yet one feels exhausted while the other keeps going. The reason? It’s not just the amount of work it’s how that work is carried. Stress doesn’t come from doing things; it comes from how we mentally frame those things. Those who constantly worry about outcomes, overanalyze every decision, or tie their worth to perfection experience burnout at a much higher rate. Meanwhile, those who approach tasks with a sense of adaptability and perspective tend to last longer and feel less drained
