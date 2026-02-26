@@ -2,7 +2,7 @@ $line: 1px solid var(--border-color);
 $sidebar-width: 130px;
 
 .site-outer {
-  width: min(100%, $usable-width + $sidebar-width + 2 * $spacing-unit);
+  width: #{"min(100%, #{$usable-width + $sidebar-width + 2 * $spacing-unit})"};
   margin: 0 auto;
   padding: 0 $spacing-unit;
   box-sizing: border-box;
