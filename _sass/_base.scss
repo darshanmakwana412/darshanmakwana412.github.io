@@ -1,0 +1,203 @@
+button {
+  cursor: pointer;
+}
+
+body, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, hr,
+dl, dd, ol, ul, figure {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: $base-font-weight #{$base-font-size}/#{$base-line-height} $base-font-family;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  font-kerning: normal;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+ul, ol, dl, figure,
+%vertical-rhythm {
+  margin-top: $spacing-unit * .5;
+  margin-bottom: $spacing-unit * .5;
+}
+
+main {
+  display: block;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+figure > img {
+  display: block;
+}
+
+figcaption {
+  font-size: $small-font-size;
+}
+
+ul, ol {
+  margin-left: $spacing-unit;
+}
+
+li {
+  > ul,
+  > ol {
+    margin-bottom: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $base-font-weight;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+blockquote {
+  border-left: 0.2em solid var(--border-color);
+  padding-left: 0.75em;
+  letter-spacing: -1px;
+  font-style: italic;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+pre, code {
+  margin: 0px;
+}
+
+code.highlighter-rouge {
+  @include relative-font-size(0.85);
+  color: var(--code-text);
+  padding: 0.1em 0.2em;
+  background-color: var(--code-bg);
+  border-radius: 0.2em;
+}
+
+figure.highlight, div.highlighter-rouge {
+  color: var(--code-text);
+  @include relative-font-size(0.825);
+  padding: 0.2em 0.6em;
+  background-color: var(--code-bg);
+  overflow-x: auto;
+  border-left: 0.25em solid var(--code-border);
+  line-height: 1.4;
+}
+
+pre td {
+  padding: 0px;
+}
+
+pre.lineno {
+  padding-right: 12px;
+  color: grey;
+  border-right: 1px dotted grey;
+  border-radius: 0px;
+}
+
+td.code {
+  padding-left: 12px;
+}
+
+.wrapper {
+  max-width: $usable-width;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-unit;
+  padding-left: $spacing-unit;
+  @extend %clearfix;
+}
+
+%clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+table:not(.post-table):not(.rouge-table) {
+  color: var(--text-color);
+  width: 100%;
+  text-align: left;
+  margin-bottom: $spacing-unit;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 0.4em 0.8em;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  th {
+    background-color: var(--code-bg);
+  }
+  tr:nth-child(even) {
+    background-color: var(--table-stripe);
+  }
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: $spacing-unit 0;
+}
+
+.birding-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.birding-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.birding-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.birding-item figcaption {
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.bird-name {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.bird-scientific {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .birding-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

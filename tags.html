@@ -1,0 +1,28 @@
+---
+layout: default
+title: Tags
+permalink: /tags/
+---
+<div class="blog-subtitle">
+  view all <a href="/">posts</a>
+</div>
+
+{% for tag in site.tags %}
+<div id="{{ tag[0] | slugify }}" style="margin-bottom: 2rem;">
+  <div class="blog-subpage-title">{{ tag[0] }} ({{ tag[1].size }})</div>
+  <table class="post-table">
+    <tbody>
+      {% for post in tag[1] %}
+      <tr>
+        <td style="padding-bottom: 0.8rem; white-space: nowrap; padding-right: 1.5rem">
+          <span class="post-list-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+        </td>
+        <td style="padding-bottom: 0.8rem">
+          <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endfor %}

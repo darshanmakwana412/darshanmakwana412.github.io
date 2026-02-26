@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+  {%- include head.html -%}
+  <body>
+    <div class="site-outer">
+      <header class="site-header">
+        <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+      </header>
+      <div class="site-body">
+        {%- include sidebar.html -%}
+        <main class="page-content" aria-label="Content">
+          {{ content }}
+        </main>
+      </div>
+    </div>
+    <script src="{{ "/assets/js/dark-mode.js" | relative_url }}"></script>
+  </body>
+</html>

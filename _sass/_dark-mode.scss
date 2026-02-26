@@ -1,0 +1,41 @@
+:root {
+  --text-color: #{$text-color};
+  --bg-color: #{$background-color};
+  --link-color: #{$brand-color};
+  --border-color: #{$grey-color-light};
+  --code-bg: #f8f8f8;
+  --code-border: #ddd;
+  --code-text: #{lighten($text-color, 10%)};
+  --table-stripe: #{lighten($grey-color-light, 6%)};
+  --text-muted: #{$grey-color};
+}
+
+[data-theme="dark"] {
+  --text-color: #c9d1d9;
+  --bg-color: #161616;
+  --link-color: #8A5CF5;
+  --border-color: #30363d;
+  --code-bg: #0d1117;
+  --code-border: #30363d;
+  --code-text: #c9d1d9;
+  --table-stripe: #1c1c1c;
+  --text-muted: #8b949e;
+
+  img {
+    opacity: 0.9;
+  }
+
+  .github-link svg {
+    fill: #c9d1d9;
+  }
+}
+
+[data-theme="light"] .sun-icon,
+[data-theme="dark"] .moon-icon {
+  display: none;
+}
+
+[data-theme="light"] .moon-icon,
+[data-theme="dark"] .sun-icon {
+  display: block;
+}

@@ -1,0 +1,24 @@
+@charset "utf-8";
+
+$base-font-family: sans-serif !default;
+$base-font-size:   1rem !default;
+$base-font-weight: 400 !default;
+$small-font-size:  $base-font-size * 0.875 !default;
+$base-line-height: 1.5 !default;
+$spacing-unit:     15px !default;
+$content-width:    800px !default;
+$usable-width: $content-width - 2 * $spacing-unit;
+
+@mixin relative-font-size($ratio) {
+  font-size: $base-font-size * $ratio;
+}
+
+@import
+  "colors",
+  "base",
+  "layout",
+  "blog",
+  "tags",
+  "syntax-highlighting",
+  "dark-mode",
+  "search";

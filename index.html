@@ -1,0 +1,28 @@
+---
+layout: default
+title: Blog
+permalink: /
+description: Darshan Makwana's blog. Thoughts on AI, programming, and life.
+---
+<!-- <div class="blog-subtitle">
+  subscribe to this <a href="{{ "/feed.xml" | relative_url }}">feed</a>, view all <a href="/tags">tags</a>
+</div> -->
+
+{%- if site.posts.size > 0 -%}
+<table class="post-table">
+  <tbody>
+    {%- for post in site.posts -%}
+    <tr>
+      <td style="padding-bottom: 0.2rem; white-space: nowrap; padding-right: 1.5rem">
+        <span class="post-list-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+      </td>
+      <td style="padding-bottom: 0.2rem">
+        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+      </td>
+    </tr>
+    {%- endfor -%}
+  </tbody>
+</table>
+{%- else -%}
+<h4>No posts yet</h4>
+{%- endif -%}

@@ -1,0 +1,7 @@
+<nav class="site-sidebar">
+  {%- for item in site.data.sidebar -%}
+  <a href="{{ item.url }}" class="sidebar-link{% if page.url == item.url %} active{% endif %}">
+    {%- if item.title == "Bookshelf" -%}Books{%- else -%}{{ item.title }}{%- endif -%}
+  </a>
+  {%- endfor -%}
+</nav>

@@ -1,0 +1,43 @@
+title: Darshan Makwana
+author: Darshan Makwana
+baseurl: ""
+url: "https://darshanmakwana412.github.io"
+
+markdown: kramdown
+highlighter: rouge
+mathjax: true
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    default_lang: plaintext
+    block:
+      line_numbers: false
+
+permalink: /:year/:month/:title/
+timezone: Asia/Kolkata
+future: true
+
+sass:
+  sass_dir: _sass
+  style: compressed
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+include:
+  - _pages
+
+feed:
+  title: "Darshan's blog"
+  author: Darshan Makwana
+
+exclude:
+  - publish.py
+  - publish.md
+  - .publish_managed
+  - Gemfile.lock
+  - node_modules
+  - vendor

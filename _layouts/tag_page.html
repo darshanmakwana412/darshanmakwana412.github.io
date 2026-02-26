@@ -1,0 +1,19 @@
+---
+layout: default
+---
+<div class="blog-subtitle">
+  view all <a href="/">posts</a> or <a href="/tags">tags</a>
+</div>
+<div class="blog-subpage-title">{{ page.title }}</div>
+<table class="post-table">
+  <tbody>
+    {%- for post in page.posts -%}
+    <tr>
+      <td style="padding-bottom: 0.8rem">
+        <span class="post-list-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+      </td>
+    </tr>
+    {%- endfor -%}
+  </tbody>
+</table>

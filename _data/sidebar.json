@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Blogs",
+    "url": "/"
+  },
+  {
+    "title": "Bookmarks",
+    "url": "/bookmarks/"
+  },
+  {
+    "title": "Birding",
+    "url": "/birding/"
+  },
+  {
+    "title": "Bookshelf",
+    "url": "/bookshelf/"
+  }
+]

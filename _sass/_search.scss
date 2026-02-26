@@ -1,0 +1,25 @@
+#search-input {
+  width: 100%;
+  padding: 0.5em 0.75em;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25em;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin-bottom: $spacing-unit;
+}
+
+#search-results {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+
+  li {
+    margin-bottom: 1em;
+  }
+
+  .search-date {
+    color: var(--text-muted);
+    font-size: $small-font-size;
+  }
+}

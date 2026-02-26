@@ -1,0 +1,15 @@
+$line: 1px solid var(--border-color) !default;
+
+.tags {
+  padding-top: $spacing-unit * 0.5;
+  padding-bottom: $spacing-unit * 0.5;
+  border-top: $line;
+}
+
+.tag, #tag-cloud > a {
+  padding-right: 0.5em;
+}
+
+#tag-cloud {
+  margin-bottom: $spacing-unit;
+}
