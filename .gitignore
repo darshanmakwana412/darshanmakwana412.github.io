@@ -6,3 +6,9 @@ _site/
 .bundle/
 vendor/
 .publish_managed
+*.aux
+*.log
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
