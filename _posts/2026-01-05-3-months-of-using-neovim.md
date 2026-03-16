@@ -9,7 +9,7 @@ tags:
 title: 3 months of using Neovim
 ---
 
-I have been using [neovim](https://neovim.io/) for the past 3 months not because I wanted to switch to a new IDE but because my org has a very bureaucratic process to open [VS Code](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/) over SSH, so instead what I usually do is spin up an [SSH terminal over http](/2025/10/ssh-over-tor/) and access it from my personal machine and use neovim as my editor. I will first try to introduce you to neovim and the real juice of it the plugin manager [lazy.nvim](https://github.com/folke/lazy.nvim) and then list down my frustrations with it. If you want to learn neovim, I would recommend to start with neovim [:Tutor](https://neovim.io/doc/user/nvim.html#nvim-intro)
+I have been using [neovim](https://neovim.io/) for the past 3 months now. In this post I will first try to introduce you to neovim and the real juice of it the plugin manager [lazy.nvim](https://github.com/folke/lazy.nvim) and then list down my frustrations with it. If you want to learn neovim, I would recommend to start with neovim [:Tutor](https://neovim.io/doc/user/nvim.html#nvim-intro)
 
 ## Why Neovim
 

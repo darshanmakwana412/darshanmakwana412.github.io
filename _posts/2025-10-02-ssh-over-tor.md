@@ -9,7 +9,7 @@ tags:
 title: SSH over Tor
 ---
 
-I previously discussed how we can [setup an ssh server](/2025/01/setting-up-ssh-server/) between a host and a client. We had to configure our router and it's firewall to enable port forwarding over TCP:22. Sometimes we don't even have access to configure the router or are behind a "dumb" [firewall](https://en.wikipedia.org/wiki/Firewall_(computing)) (in my company). In such cases attempting to connect via ssh will result in time out errors. Here I discuss how we can setup an ssh which is hidden behind the tor network.
+I previously discussed how we can [setup an ssh server](/2025/01/setting-up-ssh-server/) between a host and a client. We had to configure our router and it's firewall to enable port forwarding over TCP:22. Sometimes we don't even have access to configure the router or are behind a "dumb" [firewall](https://en.wikipedia.org/wiki/Firewall_(computing)). In such cases attempting to connect via ssh will result in time out errors. Here I discuss how we can setup an ssh which is hidden behind the tor network.
 
 **Table of Contents:**
 - [A Brush up on Firewalls](#a-brush-up-on-firewalls)
