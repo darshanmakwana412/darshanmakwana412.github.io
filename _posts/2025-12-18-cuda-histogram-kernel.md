@@ -32,7 +32,6 @@ Profiling this kernel on an array of size $2^{20}$ yields an execution time of a
 
 ```bash
 >>> nvcc -o main -arch=sm_86 histogram.cu && nsys nvprof ./main
-...
  Time (%)  Total Time (ns)  Instances  Avg (ns)  Med (ns)  Min (ns)  Max (ns)
  --------  ---------------  ---------  --------  --------  --------  --------
     100.0       230914,129          1   4,129.0   4,129.0     4,129     4,129 
