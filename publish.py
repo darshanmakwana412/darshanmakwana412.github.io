@@ -27,7 +27,7 @@ MANAGED_MARKER = ".publish_managed"
 def load_config(config_path=None):
     if config_path is None:
         for candidate in [
-            Path.home() / "Darshan" / "obsidian" / "publish.md",
+            Path.home() / "obsidian" / "publish.md",
         ]:
             if candidate.exists():
                 config_path = candidate
