@@ -6,6 +6,7 @@ title: Bookmarks
 
 Interesting things I've read on the internet
 
+- ![hamming quote](/assets/images/sharing/hamming.jpeg)
 - [How and why Netflix built a real time distributed graph](https://netflixtechblog.com/how-and-why-netflix-built-a-real-time-distributed-graph-part-1-ingesting-and-processing-data-80113e124acc)
 - [Running comments over email](https://ckardaris.github.io/blog/2026/01/22/my-comments-run-on-email.html)
 - [AI Systems Engineering Patterns](https://blog.alexewerlof.com/p/ai-systems-engineering-patterns)
