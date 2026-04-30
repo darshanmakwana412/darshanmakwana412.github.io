@@ -14,3 +14,7 @@ I had made 6 new year resolutions, 2 of them are already checked off faster than
 | 13th Mar, 2026 | 6.33          | 39min 34sec | 5:87              |
 | 22nd Mar, 2026 | 2.78          | 15min 23sec | 5:37              |
 | 29th Mar, 2026 | 1.05          | 5min 39sec  | 5:24              |
+| 4th  Apr, 2026 | 3.09          | 22min 24sec | 7:23              |
+| 19th Apr, 2026 | 5.09          | 32min 23sec | 6:30              |
+| 23rd Apr, 2026 | 3.40          | 21min 8sec  | 6:20              |
+| 24th Apr, 2026 | 3.04          | 14min 36sec | 4:08              |
