@@ -6,7 +6,7 @@ tags:
 - productivity
 - health
 - lifestyle
-title: After 3 months of standing desk
+title: After 3 months of using a standing desk
 ---
 
 Since the last 2 months I had to change my environment in which I used to do my long hours of deep work. One of the things that was part of the change was a standing desk. Actually it was not a desk per se but just a platform on top of which I can keep my laptop and just start coding away, the platform was just tall enough that I can't sit and do work and slightly short enought that I had to bend my knees, so I had to add a wooden plank on top of the platform to level it up.
