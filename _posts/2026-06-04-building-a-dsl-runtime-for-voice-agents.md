@@ -11,7 +11,7 @@ publish: true
 ---
 One thing that I have been thinking a lot about while working on voice agents is that most of the difficulty is not in writing code, the difficulty is in keeping the entire shape of the agent inside your head. A voice agent is not just a prompt and not just a graph and not just a bunch of function calls. It is all of these things together and then the user speaks something weird, STT mangles it, the LLM calls the wrong tool, the TTS has to say the right thing in the right language, the telephony provider closes the websocket and now you have to debug which exact layer broke. This is the real thing.
 
-In the earlier `spring-agent` repository we had a very straightforward way of building flows. Every client flow had a python file with many `create_*_node` functions and each function returned the pipecat node dictionary. This worked extremely well in the beginning because it lets you build fast. You can just open python, create a node, add a prompt, add some functions, write a handler and move on.
+In the earlier version of our voice-agent service we had a very straightforward way of building flows. Every flow variant had a python file with many `create_*_node` functions and each function returned the voice framework node dictionary. This worked extremely well in the beginning because it lets you build fast. You can just open python, create a node, add a prompt, add some functions, write a handler and move on.
 
 But then the number of flows started increasing and the same pattern which helped us move fast started becoming the thing which was slowing us down. Every small change was now a code change. A prompt change was a python diff. A phase change was a python diff. A graph change was a python diff. The function schema which the model sees was inside python. The handler which actually performs the side effect was also inside python. The language phrases were sometimes inside python. So everything became code, even the things that were very clearly not code.
 
@@ -22,7 +22,7 @@ This is the part where the system started feeling wrong to me. Not broken, but w
 The older flow files were mostly a long list of node builders. Something like this:
 
 ```python
-def create_opening_node(prompt_data, session, exotel_sid):
+def create_opening_node(prompt_data, session, call_id):
     starter_line = get_starter_line(prompt_data)
 
     return {
@@ -37,27 +37,27 @@ def create_opening_node(prompt_data, session, exotel_sid):
             }
         ],
         "functions": [
-            create_confirm_identity_func(prompt_data, session, exotel_sid),
-            create_proceed_to_handoff_func(prompt_data, session, exotel_sid),
-            create_switch_language_func(prompt_data, session, exotel_sid),
-            create_end_call_func(prompt_data, session, exotel_sid),
+            create_confirm_speaker_func(prompt_data, session, call_id),
+            create_proceed_to_alternate_speaker_func(prompt_data, session, call_id),
+            create_switch_language_func(prompt_data, session, call_id),
+            create_end_call_func(prompt_data, session, call_id),
         ],
         "respond_immediately": True,
         "context_strategy": append_context_strategy(),
     }
 ```
 
-This is not bad code. It is actually a very natural first version. But the issue is that after a while this function is not alone. There is opening, identity handoff, discovery, negotiation, callback scheduling, focused clarification nodes, closing nodes, final goodbye nodes, voicemail nodes and then special variants of all of these things. Then each of these nodes has different functions available in them. Then each function has a schema. Then each schema has a description. Then each handler returns another node. Then the graph exists, but the graph is not a real object, the graph is implicit in all the handler return statements.
+This is not bad code. It is actually a very natural first version. But the issue is that after a while this function is not alone. There is opening, speaker verification, discovery, followup scheduling, focused clarification nodes, closing nodes, final goodbye nodes, unanswered-call nodes and then special variants of all of these things. Then each of these nodes has different functions available in them. Then each function has a schema. Then each schema has a description. Then each handler returns another node. Then the graph exists, but the graph is not a real object, the graph is implicit in all the handler return statements.
 
 At that point to answer a very basic question like "from this phase where can the agent go next?" you have to grep the codebase and reconstruct the graph in your head. This is usually a smell. If the thing you are building is fundamentally a graph and there is no graph file anywhere, then the codebase is hiding the most important object from you.
 
-The same was true for prompts. The prompt is the main behavioral surface of the voice agent, but it was sitting inside python builder functions. This means that reviewing the agent meant reviewing python. And this is a weird coupling because the person reviewing whether the phase instruction is correct should not have to care about how pipecat wants its node dictionary to be shaped.
+The same was true for prompts. The prompt is the main behavioral surface of the voice agent, but it was sitting inside python builder functions. This means that reviewing the agent meant reviewing python. And this is a weird coupling because the person reviewing whether the phase instruction is correct should not have to care about how the voice framework wants its node dictionary to be shaped.
 
 So the thought was very simple: we should stop pretending that a flow definition is code.
 
 # The New Shape
 
-The key idea behind the migration to `dock-spring` was to separate definition from creation.
+The key idea behind the migration to the new runtime was to separate definition from creation.
 
 Definition means:
 - what phases exist
@@ -65,22 +65,22 @@ Definition means:
 - what functions are available in each phase
 - what the function schemas are
 - what the graph is
-- what starter lines / voicemail / language switch phrases exist
+- what starter lines / unanswered-call / language switch phrases exist
 - what knobs the runtime needs
 
 Creation means:
 - take all of this data
 - validate it
 - render prompts
-- build pipecat function schemas
+- build the voice framework function schemas
 - attach python handlers
-- return the exact node dict that pipecat-flows expects
+- return the exact node dict that the voice runtime expects
 
 Behavior means:
 - async handlers
-- redis/webhook/session side effects
-- phone matching
-- date caps
+- external-service/session side effects
+- verification matching
+- date validation
 - language switching
 - transcript inspection
 - anything where YAML would become cursed very quickly
@@ -95,10 +95,10 @@ Python owns behavior.
 
 This is the part which made the whole thing click for me. We are not trying to make python disappear. That would be dumb. Python is very good at behavior. But python is not the best place to write a phase graph or a 100 line prompt or a table of language phrases. Those things deserve to be data.
 
-So a flow in `dock-spring` now looks more like this:
+So a flow in the new runtime now looks more like this:
 
 ```text
-src/services/flows/example/
+flows/example/
   flow.yaml
   functions.yaml
   graph.yaml
@@ -108,12 +108,12 @@ src/services/flows/example/
     phases/
       opening.md
       discovery.md
-      callback_scheduling.md
+      followup_scheduling.md
       closing.md
   example_render.py
   example_handlers.py
   example_flow_impl.py
-  example_outbound_flows_config.py
+  example_flow_config.py
 ```
 
 Already this is much better. Without opening any python I can see that this thing has a flow manifest, functions, graph, tts copy and prompts. The shape of the directory matches the shape of the concept.
@@ -131,12 +131,12 @@ The important part is the loop at the bottom. The runtime does not only build th
 The main file is `flow.yaml`. This is the file which tells you what the agent is.
 
 ```yaml
-flow_name: example_outbound
+flow_name: example_voice_flow
 entry_phase: opening
 
 runtime_extension:
-  - src.services.flows.example.example_render
-  - src.services.flows.example.example_handlers
+  - voice_agents.flows.example.render
+  - voice_agents.flows.example.handlers
 
 role_prompt: prompts/role.md
 supported_languages:
@@ -147,8 +147,8 @@ functions_file: functions.yaml
 tts_file: tts.yaml
 graph_file: graph.yaml
 
-max_phone_verification_attempts: 3
-hard_end_fallback_secs: 6.0
+max_verification_attempts: 3
+fallback_timeout_secs: 6.0
 
 phases:
   opening:
@@ -160,8 +160,8 @@ phases:
       - type: tts_say
         text_source: starter_line
     functions:
-      - confirm_identity
-      - proceed_to_identity_handoff
+      - confirm_speaker
+      - proceed_to_alternate_speaker
       - switch_language
       - end_call
 
@@ -171,24 +171,24 @@ phases:
     respond_immediately: true
     context_strategy: append
     functions:
-      - proceed_to_callback_scheduling
+      - proceed_to_followup_scheduling
       - proceed_to_closing
       - switch_language
       - end_call
 
-  callback_scheduling:
-    render: callback_scheduling
+  followup_scheduling:
+    render: followup_scheduling
     role: base
     respond_immediately: true
     context_strategy: append
     functions:
-      - schedule_callback
+      - schedule_followup
       - proceed_to_closing
       - switch_language
       - end_call
 ```
 
-This is so much more readable than the python version because it is only trying to answer one question: what is the flow made of? It is not trying to be clever. It is not doing side effects. It is not hiding graph edges inside closures. It is just saying that opening has these functions, discovery has these functions, callback scheduling has these functions.
+This is so much more readable than the python version because it is only trying to answer one question: what is the flow made of? It is not trying to be clever. It is not doing side effects. It is not hiding graph edges inside closures. It is just saying that opening has these functions, discovery has these functions, followup scheduling has these functions.
 
 I think good abstractions often have this property where they make the obvious thing obvious again. This is not some insane compiler technology. It is just taking the thing that already existed in our head and putting it in a file.
 
@@ -197,14 +197,14 @@ I think good abstractions often have this property where they make the obvious t
 The next file is `functions.yaml`. This is where the LLM tool interface lives.
 
 ```yaml
-proceed_to_callback_scheduling:
-  name: proceed_to_callback_scheduling
-  description: Move to callback scheduling when the user explicitly asks for a callback or says they are busy right now.
+proceed_to_followup_scheduling:
+  name: proceed_to_followup_scheduling
+  description: Move to followup scheduling when the user explicitly asks for a followup or says they are busy right now.
   properties:
     reason:
       type: string
-      description: Short explanation of why callback scheduling is needed.
-    callback_timing:
+      description: Short explanation of why followup scheduling is needed.
+    followup_timing:
       type: string
       enum:
         - same_day
@@ -214,9 +214,9 @@ proceed_to_callback_scheduling:
       description: Best normalized timing category from the latest user turn.
   required:
     - reason
-    - callback_timing
+    - followup_timing
   handler:
-    type: proceed_to_callback_scheduling
+    type: proceed_to_followup_scheduling
 
 end_call:
   name: end_call
@@ -226,8 +226,8 @@ end_call:
       type: string
       enum:
         - resolved
-        - wrong_party
-        - voicemail
+        - not_intended_user
+        - unanswered-call
         - no_response_timeout
     farewell_line:
       type: string
@@ -249,21 +249,21 @@ Prompts live as Markdown. This sounds obvious but it matters a lot. A prompt sho
 
 ```markdown
 ACTIVE NODE: opening
-JOB: identify whether the speaker is the expected customer without disclosing private details.
+JOB: identify whether the speaker is the expected user without disclosing private details.
 
 Starter already spoken: "{starter_line}" Do not repeat it.
-Expected customer: {customer_name}.
+Expected user: {user_name}.
 
 ROUTING:
-- If the speaker confirms identity, call confirm_identity with no assistant text.
-- If this is a wrong number, apologize briefly and call end_call.
-- If they ask to speak later, call proceed_to_callback_scheduling.
+- If the speaker confirms they are the expected user, call confirm_speaker with no assistant text.
+- If this is not the intended user, apologize briefly and call end_call.
+- If they ask to speak later, call proceed_to_followup_scheduling.
 - If they request another language, call switch_language.
 
 Today is {today_day}, {today_date}.
 ```
 
-This also makes prompt iteration much nicer. You can open `prompts/phases/opening.md`, edit the instruction and run parity or smoke tests. You do not have to touch node construction. You do not have to think about `FlowsFunctionSchema`. You are just editing the agent's instruction surface.
+This also makes prompt iteration much nicer. You can open `prompts/phases/opening.md`, edit the instruction and run parity or smoke tests. You do not have to touch node construction. You do not have to think about `VoiceFunctionSchema`. You are just editing the agent's instruction surface.
 
 The role prompt is also Markdown:
 
@@ -286,20 +286,20 @@ The graph is also data now.
 ```yaml
 phase_graph:
   opening:
-    - identity_handoff
+    - alternate_speaker_route
     - discovery
     - ended
 
-  identity_handoff:
+  alternate_speaker_route:
     - discovery
     - ended
 
   discovery:
-    - callback_scheduling
+    - followup_scheduling
     - closing
     - ended
 
-  callback_scheduling:
+  followup_scheduling:
     - closing
     - ended
 
@@ -307,7 +307,7 @@ phase_graph:
     - ended
 
 dynamic_var_keys:
-  - customer_name
+  - user_name
   - today_date
   - today_day
   - starter_line
@@ -329,10 +329,10 @@ The spoken fixed text also moved out.
 
 ```yaml
 starter_lines:
-  en: Hello, may I speak with {customer_name}, please?
-  hi: Namaste, kya main {customer_name} se baat kar raha hoon?
+  en: Hello, may I speak with {user_name}, please?
+  hi: Namaste, kya main {user_name} se baat kar raha hoon?
 
-voicemail_messages:
+unanswered_call_messages:
   en: Hi, I was trying to reach you. Please call me back when convenient. Thank you.
   hi: Namaste, main aapse baat karne ki koshish kar raha tha. Kripya convenient ho to mujhe wapas call karein.
 
@@ -341,7 +341,7 @@ switch_phrases:
   hi: Theek hai, main aapke saath Hindi mein baat karta hoon.
 ```
 
-This seems small but it prevents a lot of weird drift. Voice agents have these little pieces of fixed text which are not always part of the LLM prompt. Starter lines, voicemail, language switching acknowledgements, final fallback lines. If they live inside handler code they become easy to forget during a port. Moving them to `tts.yaml` makes them part of the flow definition.
+This seems small but it prevents a lot of weird drift. Voice agents have these little pieces of fixed text which are not always part of the LLM prompt. Starter lines, unanswered-call, language switching acknowledgements, final fallback lines. If they live inside handler code they become easy to forget during a port. Moving them to `tts.yaml` makes them part of the flow definition.
 
 # The Runtime
 
@@ -355,7 +355,7 @@ def create_node(
     phase_name,
     prompt_data,
     session,
-    exotel_sid,
+    call_id,
     *,
     include_role_message=None,
     **extra,
@@ -373,7 +373,7 @@ def create_node(
             **extra,
         ),
         "functions": [
-            self._build_function(fn_name, prompt_data, session, exotel_sid)
+            self._build_function(fn_name, prompt_data, session, call_id)
             for fn_name in phase.get("functions") or []
         ],
     }
@@ -391,9 +391,9 @@ def create_node(
     return node
 ```
 
-There is nothing magical here and that is the point. The runtime should not be smart in a tenant-specific way. It should not know what callback scheduling means. It should not know what identity handoff means. It should only know how to take a phase definition and build the correct pipecat node out of it.
+There is nothing magical here and that is the point. The runtime should not be smart in a flow-specific way. It should not know what followup scheduling means. It should not know what speaker verification means. It should only know how to take a phase definition and build the correct voice framework node out of it.
 
-The tenant-specific things are registered.
+The flow-specific things are registered.
 
 ```python
 HANDLER_BUILDERS = {}
@@ -422,20 +422,20 @@ This is the part where I think it would have been very easy to make the wrong ab
 The correct boundary is that YAML should not become a programming language. The moment you need real logic, use python. For example:
 
 ```python
-def _schedule_callback(runtime, prompt_data, session, exotel_sid, **_cfg):
+def _schedule_followup(runtime, prompt_data, session, call_id, **_cfg):
     return _schema_handler(
-        impl._create_schedule_callback_func(
+        impl._create_schedule_followup_func(
             session,
-            exotel_sid,
+            call_id,
             prompt_data,
         )
     )
 
 
-register_handler_type("schedule_callback", _schedule_callback)
+register_handler_type("schedule_followup", _schedule_followup)
 ```
 
-The YAML tells the runtime that `schedule_callback` is available in a phase and that it maps to handler type `schedule_callback`. But the actual scheduling logic, the async closure, the session update, the side effects, all of that stays in python where it belongs.
+The YAML tells the runtime that `schedule_followup` is available in a phase and that it maps to handler type `schedule_followup`. But the actual scheduling logic, the async closure, the session update, the side effects, all of that stays in python where it belongs.
 
 The main trick we needed was for transitions. A handler should be able to say "go to this phase" without importing an old imperative node builder.
 
@@ -450,7 +450,7 @@ def _set_node_factory(factory):
     _NODE_FACTORY = factory
 
 
-def build_phase_node(phase, prompt_data, session, exotel_sid, **extra):
+def build_phase_node(phase, prompt_data, session, call_id, **extra):
     if _NODE_FACTORY is None:
         raise RuntimeError("node factory not registered")
 
@@ -458,7 +458,7 @@ def build_phase_node(phase, prompt_data, session, exotel_sid, **extra):
         phase,
         prompt_data,
         session,
-        exotel_sid,
+        call_id,
         **extra,
     )
 ```
@@ -470,14 +470,14 @@ def register_runtime(runtime):
     impl._set_node_factory(runtime.create_node)
 ```
 
-This little thing is very important. It means that transition handlers build the next node through the DSL runtime. So if the handler decides to move to `callback_scheduling`, it does not call `create_callback_scheduling_node`. It calls:
+This little thing is very important. It means that transition handlers build the next node through the DSL runtime. So if the handler decides to move to `followup_scheduling`, it does not call `create_followup_scheduling_node`. It calls:
 
 ```python
 return build_phase_node(
-    "callback_scheduling",
+    "followup_scheduling",
     prompt_data,
     session,
-    exotel_sid,
+    call_id,
 )
 ```
 
@@ -490,7 +490,7 @@ Another thing that made the migration practical was keeping the old API alive. T
 ```python
 from pathlib import Path
 
-from src.services.flows.dsl.runtime import load_dsl_flow_runtime
+from voice_agents.dsl.runtime import load_dsl_flow_runtime
 
 _FLOW_YAML_PATH = Path(__file__).with_name("flow.yaml")
 _RUNTIME = load_dsl_flow_runtime(_FLOW_YAML_PATH)
@@ -498,7 +498,7 @@ _RUNTIME = load_dsl_flow_runtime(_FLOW_YAML_PATH)
 _NODE_EXPORTS = {
     "create_opening_node": "opening",
     "create_discovery_node": "discovery",
-    "create_callback_scheduling_node": "callback_scheduling",
+    "create_followup_scheduling_node": "followup_scheduling",
     "create_closing_node": "closing",
 }
 
@@ -509,12 +509,12 @@ def __getattr__(name):
 
     phase_name = _NODE_EXPORTS[name]
 
-    def create_node(prompt_data, session, exotel_sid, *, include_role_message=None):
+    def create_node(prompt_data, session, call_id, *, include_role_message=None):
         return _RUNTIME.create_node(
             phase_name,
             prompt_data or {},
             session,
-            exotel_sid,
+            call_id,
             include_role_message=include_role_message,
         )
 
@@ -539,17 +539,17 @@ simple_agent/
   prompts/phases/closing.md
   simple_render.py
   simple_handlers.py
-  simple_outbound_flows_config.py
+  simple_flow_config.py
 ```
 
 The flow:
 
 ```yaml
-flow_name: simple_booking_agent
+flow_name: simple_voice_agent
 entry_phase: opening
 runtime_extension:
-  - src.services.flows.simple_agent.simple_render
-  - src.services.flows.simple_agent.simple_handlers
+  - voice_agents.flows.simple_agent.render
+  - voice_agents.flows.simple_agent.handlers
 role_prompt: prompts/role.md
 functions_file: functions.yaml
 tts_file: tts.yaml
@@ -627,11 +627,11 @@ register_render_type("phase_md", render_phase_md)
 
 At this point you have a voice agent whose structure is completely visible. You can see the phases, the graph, the tools and the prompts without reading node construction code. And if tomorrow you want to add a `reschedule` phase, it is obvious where that change should go.
 
-# Migration From spring-agent to dock-spring
+# Migration From The Old Runtime To The New Runtime
 
 The migration process was basically:
 
-1. Take the old `spring-agent` flow as the frozen reference
+1. Take the old flow implementation as the frozen reference
 2. Extract prompts into Markdown
 3. Extract function schemas into `functions.yaml`
 4. Extract the graph into `graph.yaml`
@@ -668,7 +668,7 @@ def node_fingerprint(node):
 
 The old imperative module and the new DSL adapter both expose `create_*_node` functions. So the same harness can call both, normalize the result and diff the JSON. This catches prompt drift, schema drift, function ordering drift, node flag drift and role message drift.
 
-But not everything appears in a node fingerprint. Voicemail messages and language switch phrases can be spoken by handlers, not embedded in `task_messages`. So we also need direct data-layer diffs for `tts.yaml`, graph and knobs. And for helper behavior like phone matching, date caps or amount parsing, we need behavior batteries where the same inputs are run through both implementations.
+But not everything appears in a node fingerprint. Unanswered-call messages and language switch phrases can be spoken by handlers, not embedded in `task_messages`. So we also need direct data-layer diffs for `tts.yaml`, graph and knobs. And for helper behavior like verification matching, date validation or input normalization, we need behavior batteries where the same inputs are run through both implementations.
 
 This was a very useful lesson. The DSL is not enough by itself. The DSL plus parity harness is the actual migration system.
 
@@ -689,14 +689,14 @@ This is very important because most bugs in these systems are not "python syntax
 
 It also changes the review process. If someone changes a prompt, I can review a Markdown diff. If someone changes a tool description, I can review a YAML diff. If someone changes a transition, I can review `graph.yaml`. This sounds small but these small changes compound into a much better engineering loop.
 
-The other big impact is that `dock-spring` can now become the canonical home for these flows. `spring-agent` becomes the frozen reference which we port from and compare against, not the place where all future flow complexity keeps accumulating. This matters because every new imperative flow would otherwise increase the future migration cost.
+The other big impact is that the new runtime can now become the canonical home for these flows. The old implementation becomes the frozen reference which we port from and compare against, not the place where all future flow complexity keeps accumulating. This matters because every new imperative flow would otherwise increase the future migration cost.
 
 # Future
 
-There is a lot more that becomes possible now. Since the graph is data, we can render it automatically. Since prompts are Markdown, we can build prompt review tools. Since function schemas are YAML, we can diff tool surfaces across flows. Since node construction is generic, we can build synthetic call tests that run across many tenants in the same way.
+There is a lot more that becomes possible now. Since the graph is data, we can render it automatically. Since prompts are Markdown, we can build prompt review tools. Since function schemas are YAML, we can diff tool surfaces across flows. Since node construction is generic, we can build synthetic call tests that run across many flows in the same way.
 
 I also think there should eventually be a small authoring workbench around this. Something where you can open a flow, see the graph, click a phase, edit the prompt, run a synthetic call and see exactly which node was built and which function was called. That becomes much easier once the flow definition is not trapped inside python.
 
-But even without that, the migration has already made the system feel much more sane. The voice agent is no longer a giant python file pretending to be a config. It is a set of phases, prompts, functions, transitions and behavior hooks. The runtime compiles it into pipecat nodes. The parity harness makes sure we did not accidentally change the agent while moving it.
+But even without that, the migration has already made the system feel much more sane. The voice agent is no longer a giant python file pretending to be a config. It is a set of phases, prompts, functions, transitions and behavior hooks. The runtime compiles it into the voice framework nodes. The parity harness makes sure we did not accidentally change the agent while moving it.
 
 This is the whole thing. Take the implicit structure that was hiding in code and make it explicit. Once that happens, the system becomes easier to understand, easier to test and much easier to evolve.
