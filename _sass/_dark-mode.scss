@@ -8,6 +8,7 @@
   --code-text: #{lighten($text-color, 10%)};
   --table-stripe: #{lighten($grey-color-light, 6%)};
   --text-muted: #{$grey-color};
+  --dyna-color: #{rgba($grey-color, 0.32)};
 }
 
 [data-theme="dark"] {
@@ -20,6 +21,7 @@
   --code-text: #c9d1d9;
   --table-stripe: #1c1c1c;
   --text-muted: #8b949e;
+  --dyna-color: rgba(201, 209, 217, 0.20);
 
   img {
     opacity: 0.9;

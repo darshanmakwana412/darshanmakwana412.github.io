@@ -1,0 +1,21 @@
+.dyna {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1;
+  white-space: pre;
+  color: var(--dyna-color);
+  pointer-events: none;
+  user-select: none;
+}
+
+// Keep the page above the trail.
+.site-outer {
+  position: relative;
+  z-index: 1;
+}
