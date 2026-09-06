@@ -1,6 +1,7 @@
 ---
 layout: page
 publish: true
+published: false
 title: Bookshelf
 ---
 
