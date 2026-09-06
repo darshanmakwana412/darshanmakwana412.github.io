@@ -8,9 +8,9 @@
  * a plain <pre> and keeps the physics and the renderer identical.
  */
 (function () {
-  const MASS = 20    // Pencil mass
+  const MASS = 40    // Pencil mass
   const DAMP = 0.95  // Pencil damping
-  const RADIUS = 15  // Pencil radius
+  const RADIUS = 10  // Pencil radius
   const FPS = 60
 
   const density = ' .:░▒▓█Ñ#+-'.split('')
