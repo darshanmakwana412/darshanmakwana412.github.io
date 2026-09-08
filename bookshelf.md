@@ -5,7 +5,7 @@ permalink: /bookshelf/
 title: Bookshelf
 ---
 
-Books I have finished, with a short summary of what stayed with me.
+Books I have finished reading and how they shaped my perspective
 
 <div class="book-entry" markdown="1">
 <div class="book-summary" markdown="1">
