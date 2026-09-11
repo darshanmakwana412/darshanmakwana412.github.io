@@ -1,11 +1,12 @@
-// ASCII noise band in the site header.
+// ASCII noise bands in the site header and sidebar.
 // A port of ertdfgcvb's play.core "Hotlink" sketch: every character cell samples
 // OpenSimplex noise at (x, y, t) and picks a glyph from a density ramp.
+// Every .ascii-noise-wrap on the page is one band. They share a single noise
+// field, offset by their position on the page, so they read as one texture.
 // Depends on assets/js/simplex-noise.js (defines the global openSimplexNoise).
 (function () {
-  var wrap = document.querySelector('.ascii-noise-wrap');
-  var pre = document.getElementById('ascii-noise');
-  if (!wrap || !pre || typeof openSimplexNoise !== 'function') return;
+  var wraps = Array.prototype.slice.call(document.querySelectorAll('.ascii-noise-wrap'));
+  if (!wraps.length || typeof openSimplexNoise !== 'function') return;
 
   var noise3D = openSimplexNoise(Date.now()).noise3D;
   var density = ' .:░▒▓█Ñ#+-'.split('');
@@ -16,41 +17,62 @@
   var reduceMotion = window.matchMedia
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var cols = 0, rows = 0, aspect = 1;
+  var bands = wraps.map(function (wrap) {
+    var pre = wrap.querySelector('.ascii-noise');
+    return pre ? { wrap: wrap, pre: pre, cols: 0, rows: 0, ox: 0, oy: 0, aspect: 1, visible: true } : null;
+  }).filter(Boolean);
+  if (!bands.length) return;
 
-  // Measure one character cell so the grid fits the wrapper exactly.
-  function measure() {
-    var probe = document.createElement('span');
-    probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;display:inline-block';
-    probe.textContent = 'MMMMMMMMMMMMMMMMMMMM'; // 20 chars
-    pre.appendChild(probe);
-    var rect = probe.getBoundingClientRect();
-    pre.removeChild(probe);
-
-    var cellW = rect.width / 20;
-    var cellH = rect.height;
-    if (!cellW || !cellH) { cols = rows = 0; return; }
-
-    cols = Math.floor(wrap.clientWidth / cellW);
-    rows = Math.floor(wrap.clientHeight / cellH);
-    aspect = cellW / cellH;
+  function docRect(el) {
+    var r = el.getBoundingClientRect();
+    return { left: r.left + window.pageXOffset, top: r.top + window.pageYOffset };
   }
 
-  function render(timeMs) {
-    if (cols <= 0 || rows <= 0) { pre.textContent = ''; return; }
+  // Measure one character cell so each grid fits its wrapper exactly, and
+  // offset each band so all of them sample the same field.
+  function measure() {
+    var origin = docRect(bands[0].wrap);
+    bands.forEach(function (b) {
+      var probe = document.createElement('span');
+      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;display:inline-block';
+      probe.textContent = 'MMMMMMMMMMMMMMMMMMMM'; // 20 chars
+      b.pre.appendChild(probe);
+      var rect = probe.getBoundingClientRect();
+      b.pre.removeChild(probe);
+
+      var cellW = rect.width / 20;
+      var cellH = rect.height;
+      if (!cellW || !cellH || b.wrap.clientWidth === 0) { b.cols = b.rows = 0; return; }
+
+      b.cols = Math.floor(b.wrap.clientWidth / cellW);
+      b.rows = Math.floor(b.wrap.clientHeight / cellH);
+      b.aspect = cellW / cellH;
+
+      var pos = docRect(b.wrap);
+      b.ox = Math.round((pos.left - origin.left) / cellW);
+      b.oy = Math.round((pos.top - origin.top) / cellH);
+    });
+  }
+
+  function renderBand(b, timeMs) {
+    if (b.cols <= 0 || b.rows <= 0) { b.pre.textContent = ''; return; }
     var t = timeMs * SPEED;
     var last = density.length - 1;
     var out = '';
-    for (var y = 0; y < rows; y++) {
-      var ny = y * SCALE / aspect + t;
-      for (var x = 0; x < cols; x++) {
-        var v = noise3D(x * SCALE, ny, t) * 0.5 + 0.5;
+    for (var y = 0; y < b.rows; y++) {
+      var ny = (y + b.oy) * SCALE / b.aspect + t;
+      for (var x = 0; x < b.cols; x++) {
+        var v = noise3D((x + b.ox) * SCALE, ny, t) * 0.5 + 0.5;
         var i = Math.floor(v * density.length);
         out += density[i < 0 ? 0 : i > last ? last : i];
       }
-      if (y < rows - 1) out += '\n';
+      if (y < b.rows - 1) out += '\n';
     }
-    pre.textContent = out;
+    b.pre.textContent = out;
+  }
+
+  function renderAll(timeMs) {
+    bands.forEach(function (b) { if (b.visible) renderBand(b, timeMs); });
   }
 
   var running = false, rafId = 0, lastFrame = 0;
@@ -60,48 +82,55 @@
     rafId = requestAnimationFrame(loop);
     if (now - lastFrame < FRAME_MS) return;
     lastFrame = now;
-    render(now);
+    renderAll(now);
   }
 
-  function start() {
-    if (running || reduceMotion) return;
-    running = true;
-    rafId = requestAnimationFrame(loop);
-  }
-
-  function stop() {
-    running = false;
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
+  function syncLoop() {
+    if (reduceMotion) return;
+    var anyVisible = bands.some(function (b) { return b.visible; });
+    if (anyVisible && !running) {
+      running = true;
+      rafId = requestAnimationFrame(loop);
+    } else if (!anyVisible && running) {
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
   }
 
   measure();
-  render(performance.now());
+  renderAll(performance.now());
 
   if (reduceMotion) return; // one static frame is enough
 
-  // Re-fit the grid when the header changes size.
+  // Re-fit the grids when any band changes size.
+  var pending = false;
+  function refit() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () {
+      pending = false;
+      measure();
+      renderAll(performance.now());
+    });
+  }
   if (typeof ResizeObserver === 'function') {
-    var pending = false;
-    new ResizeObserver(function () {
-      if (pending) return;
-      pending = true;
-      requestAnimationFrame(function () {
-        pending = false;
-        measure();
-        render(performance.now());
-      });
-    }).observe(wrap);
+    var ro = new ResizeObserver(refit);
+    bands.forEach(function (b) { ro.observe(b.wrap); });
   } else {
-    window.addEventListener('resize', function () { measure(); render(performance.now()); });
+    window.addEventListener('resize', refit);
   }
 
-  // Only animate while the header is on screen.
+  // Only animate bands that are on screen.
   if (typeof IntersectionObserver === 'function') {
-    new IntersectionObserver(function (entries) {
-      entries[0].isIntersecting ? start() : stop();
-    }).observe(wrap);
-  } else {
-    start();
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var b = bands.filter(function (b) { return b.wrap === e.target; })[0];
+        if (b) b.visible = e.isIntersecting;
+      });
+      syncLoop();
+    });
+    bands.forEach(function (b) { io.observe(b.wrap); });
   }
+  syncLoop();
 })();
