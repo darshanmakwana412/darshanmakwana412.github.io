@@ -1,0 +1,13 @@
+{%- comment -%}
+Renders a post title written as:  Plain Title | 🔥 [Hacker News](https://...)
+Left of the first " | " is the post title (escaped, linked to the post).
+Everything after it is rendered as markdown, so links work.
+Usage: {% include post_title.html post=post %}
+{%- endcomment -%}
+{%- assign parts = include.post.title | split: " | " -%}
+{%- assign main_title = parts[0] | strip -%}
+<a class="post-link" href="{{ include.post.url | relative_url }}">{{ main_title | escape }}</a>
+{%- if parts.size > 1 -%}
+{%- assign extra = parts | shift | join: " | " | markdownify | strip | remove: "<p>" | remove: "</p>" -%}
+<span class="post-title-sep"> | </span><span class="post-title-extra">{{ extra }}</span>
+{%- endif -%}

@@ -17,7 +17,7 @@ description: Darshan Makwana's blog. Thoughts on AI, programming, and life.
         <span class="post-list-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
       </td>
       <td style="padding-bottom: 0.2rem">
-        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+        {% include post_title.html post=post %}
       </td>
     </tr>
     {%- endfor -%}

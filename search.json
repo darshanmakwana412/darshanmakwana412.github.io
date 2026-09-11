@@ -3,7 +3,7 @@
 [
   {% for post in site.posts %}
   {
-    "title": {{ post.title | jsonify }},
+    "title": {{ post.title | split: " | " | first | strip | jsonify }},
     "url": {{ post.url | relative_url | jsonify }},
     "date": {{ post.date | date: "%b %-d, %Y" | jsonify }},
     "tags": {{ post.tags | jsonify }},

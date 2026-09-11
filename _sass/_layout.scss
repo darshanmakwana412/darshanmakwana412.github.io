@@ -111,6 +111,17 @@ $sidebar-width: 130px;
   line-height: 1;
   margin-bottom: 0;
   font-weight: bold;
+
+  // The h1 links to the post itself; keep it looking like a heading.
+  a.post-link {
+    color: inherit;
+  }
+}
+
+// Separator between the title and an optional suffix (e.g. "| 🔥 Hacker News")
+.post-title-sep {
+  color: var(--text-muted);
+  font-weight: normal;
 }
 
 .post-content {

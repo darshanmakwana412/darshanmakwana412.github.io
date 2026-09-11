@@ -8,7 +8,7 @@ tags:
 - steering
 - jacobian-lens
 - activation-steering
-title: Extracting Steering Vectors from the J Space
+title: Extracting Steering Vectors from the J Space | 🔥 [Hacker News](https://news.ycombinator.com/item?id=49586667)
 ---
 
 I was reading about the [jacobian space](https://transformer-circuits.pub/2026/workspace/index.html) and how it can be used to verbalize the intermediate activations of an LLM to decode what it is most likely going to say or is thinking about. I wanted to test if we can use the j lens to arrive at a general [activation steering vector](https://www.lesswrong.com/posts/ndyngghzFY388Dnew/implementing-activation-steering) from a couple of tokens related to the concept towards which we wanted to steer the model i.e inverting the j lens to have a general method of finding steering vectors from the concept tokens

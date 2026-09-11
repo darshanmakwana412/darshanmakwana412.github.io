@@ -2,7 +2,19 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  {%- seo -%}
+  {%- comment -%}
+  Titles may carry a " | ..." suffix (e.g. a Hacker News link). jekyll-seo-tag has no
+  title override, so render it, then swap the formatted full title for the clean one.
+  {%- endcomment -%}
+  {%- assign clean_title = page.title | split: " | " | first | strip -%}
+  {%- capture seo_html -%}{%- seo -%}{%- endcapture -%}
+  {%- if page.title and clean_title != page.title -%}
+    {%- assign seo_full = page.title | markdownify | strip_html | normalize_whitespace | escape_once -%}
+    {%- assign seo_clean = clean_title | markdownify | strip_html | normalize_whitespace | escape_once -%}
+    {{- seo_html | replace: seo_full, seo_clean -}}
+  {%- else -%}
+    {{- seo_html -}}
+  {%- endif %}
   <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}">
   {%- feed_meta -%}
   <script>

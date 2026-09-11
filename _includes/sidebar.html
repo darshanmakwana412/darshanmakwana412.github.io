@@ -1,6 +1,20 @@
 <nav class="site-sidebar">
+  {%- comment -%}
+  A nav item is active when its URL matches the page, or, for the "Blogs" item ("/"),
+  when the page is a post or a tag listing (those live under the blog).
+  {%- endcomment -%}
+  {%- assign is_blog_page = false -%}
+  {%- if page.layout == "post" or page.url contains "/tags/" -%}
+    {%- assign is_blog_page = true -%}
+  {%- endif -%}
   {%- for item in site.data.sidebar -%}
-  <a href="{{ item.url }}" class="sidebar-link{% if page.url == item.url %} active{% endif %}">
+  {%- assign is_active = false -%}
+  {%- if page.url == item.url -%}
+    {%- assign is_active = true -%}
+  {%- elsif item.url == "/" and is_blog_page -%}
+    {%- assign is_active = true -%}
+  {%- endif -%}
+  <a href="{{ item.url }}" class="sidebar-link{% if is_active %} active{% endif %}">
     {%- if item.title == "Bookshelf" -%}Books{%- else -%}{{ item.title }}{%- endif -%}
   </a>
   {%- endfor -%}
