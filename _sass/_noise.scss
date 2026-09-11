@@ -34,6 +34,11 @@
   color: #000;
 }
 
+// Clicking the site title switches the bands off and on (see noise-header.js).
+[data-noise="off"] .ascii-noise-wrap {
+  display: none;
+}
+
 // Black is invisible on the dark background, so fall back to the text colour there.
 [data-theme="dark"] .ascii-noise {
   color: var(--text-color);

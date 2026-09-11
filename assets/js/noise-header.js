@@ -8,6 +8,24 @@
   var wraps = Array.prototype.slice.call(document.querySelectorAll('.ascii-noise-wrap'));
   if (!wraps.length || typeof openSimplexNoise !== 'function') return;
 
+  // Clicking the site title toggles the bands. The choice is remembered across
+  // pages, and head.html applies it before first paint. The title's href stays
+  // as a no-JS fallback; the "Blogs" link in the sidebar also goes home.
+  var title = document.querySelector('.site-title');
+  if (title) {
+    title.addEventListener('click', function (e) {
+      e.preventDefault();
+      var root = document.documentElement;
+      var off = root.getAttribute('data-noise') === 'off';
+      if (off) {
+        root.removeAttribute('data-noise');
+      } else {
+        root.setAttribute('data-noise', 'off');
+      }
+      try { localStorage.setItem('noise', off ? 'on' : 'off'); } catch (_) {}
+    });
+  }
+
   // A fixed seed and a wall-clock time base make the field identical on every
   // page, so following a link or refreshing does not restart the animation.
   var SEED = 20260911;
