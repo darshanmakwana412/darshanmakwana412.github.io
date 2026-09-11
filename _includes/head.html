@@ -22,7 +22,7 @@
       var theme = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-theme', theme);
       // The ascii noise is off unless the visitor switched it on by clicking the title.
-      if (localStorage.getItem('noise') !== 'on') {
+      if (localStorage.getItem('ascii-noise') !== 'on') {
         document.documentElement.setAttribute('data-noise', 'off');
       }
     })();

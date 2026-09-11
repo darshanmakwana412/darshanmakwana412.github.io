@@ -22,7 +22,7 @@
       } else {
         root.setAttribute('data-noise', 'off');
       }
-      try { localStorage.setItem('noise', off ? 'on' : 'off'); } catch (_) {}
+      try { localStorage.setItem('ascii-noise', off ? 'on' : 'off'); } catch (_) {}
     });
   }
 
