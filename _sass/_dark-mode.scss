@@ -8,7 +8,7 @@
   --code-text: #{lighten($text-color, 10%)};
   --table-stripe: #{lighten($grey-color-light, 6%)};
   --text-muted: #{$grey-color};
-  --dyna-color: #{rgba($grey-color, 1.0)};
+  --dyna-color: #000;
 }
 
 [data-theme="dark"] {
