@@ -1,0 +1,52 @@
+// ASCII noise bands: one fills the whole header behind the site title, one
+// fills the sidebar column below the nav links. They share one noise field.
+.ascii-noise-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+// The sidebar band lives in the nav's flex flow and takes whatever height is left.
+.ascii-noise-wrap--sidebar {
+  position: relative;
+  inset: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 0.5rem;
+  margin-right: $noise-gutter; // same right edge as the header band left of the title
+}
+
+.ascii-noise {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: hidden;
+  white-space: pre;
+  font-family: Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+  font-size: 8px;
+  line-height: 8px;
+  color: #000;
+}
+
+// Clicking the site title switches the bands off and on (see noise-header.js).
+[data-noise="off"] .ascii-noise-wrap {
+  display: none;
+}
+
+// Black is invisible on the dark background, so fall back to the text colour there.
+[data-theme="dark"] .ascii-noise {
+  color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+  // The nav is a horizontal row on phones; there is no column to fill.
+  .ascii-noise-wrap--sidebar {
+    display: none;
+  }
+}
