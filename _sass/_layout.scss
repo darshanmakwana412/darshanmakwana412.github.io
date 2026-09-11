@@ -76,13 +76,15 @@ $sidebar-width: 130px;
 }
 
 .site-sidebar {
-  padding: 1rem 0;
+  padding: 1rem 0 0;
   display: flex;
   flex-direction: column;
   gap: 0.2em;
   position: sticky;
   top: 0;
-  height: calc(100vh - 48px);
+  // Exactly the viewport once stuck, so the noise band runs to the bottom edge.
+  height: 100vh;
+  box-sizing: border-box;
 }
 
 .sidebar-link {

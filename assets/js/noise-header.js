@@ -44,8 +44,9 @@
       var cellH = rect.height;
       if (!cellW || !cellH || b.wrap.clientWidth === 0) { b.cols = b.rows = 0; return; }
 
-      b.cols = Math.floor(b.wrap.clientWidth / cellW);
-      b.rows = Math.floor(b.wrap.clientHeight / cellH);
+      // Round up so a partial last row/column is clipped rather than left blank.
+      b.cols = Math.ceil(b.wrap.clientWidth / cellW);
+      b.rows = Math.ceil(b.wrap.clientHeight / cellH);
       b.aspect = cellW / cellH;
 
       var pos = docRect(b.wrap);
