@@ -4,8 +4,6 @@ permalink: /running/
 title: Running
 ---
 
-I had made 6 new year resolutions, 2 of them are already checked off faster than I had ever imagined. One of the remaining on the list is running a full distance marathon in a reasonable amount of time before the year is out. Let's see how quickly can I get there
-
 | Date           | Distance (km) | Total Time  | Avg Pace (min/km) |
 | -------------- | ------------- | ----------- | ----------------- |
 | 2nd Dec, 2025  | 5.03          | 27min 49sec | 5:32              |

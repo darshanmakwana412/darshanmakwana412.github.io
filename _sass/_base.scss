@@ -195,6 +195,51 @@ hr {
   color: var(--text-muted);
 }
 
+.book-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.book-summary {
+  flex: 1;
+  min-width: 0;
+
+  h3 {
+    margin: 0 0 0.2rem;
+    font-weight: bold;
+  }
+
+  p {
+    margin-top: 0;
+  }
+}
+
+.book-cover {
+  flex: 0 0 160px;
+  width: 160px;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 3px;
+  }
+}
+
+@media (max-width: 768px) {
+  .book-entry {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+
+  .book-cover {
+    flex: none;
+    width: 140px;
+  }
+}
+
 @media (max-width: 768px) {
   .birding-grid {
     grid-template-columns: 1fr;
