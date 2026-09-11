@@ -1,22 +1,41 @@
 /**
- * An ASCII trail that lags behind the cursor like a weighted pen.
+ * An ASCII trail that lags behind a wandering point like a weighted pen.
  *
  * Port of ertdfgcvb's "Dyna" (https://play.ertdfgcvb.xyz/#/src/demos/dyna),
- * itself a remix of Paul Haeberli's Dynadraw from 1989. The original runs on
- * the play.core framework, which hands the sketch a character grid, a cursor in
- * grid coordinates and a value buffer; this file rebuilds just that much around
- * a plain <pre> and keeps the physics and the renderer identical.
+ * itself a remix of Paul Haeberli's Dynadraw from 1989. The original follows
+ * the cursor; here the pen chases a point riding a Lorenz attractor, confined
+ * to the empty margin to the right of the content so it never sits on text.
  */
 (function () {
-  const MASS = 40    // Pencil mass
+  const MASS = 60    // Pencil mass
   const DAMP = 0.95  // Pencil damping
-  const RADIUS = 6   // Pencil radius
+  const RADIUS = 5   // Pencil radius
+  const DECAY = 0.97 // Per-frame fade of the trail; lower is shorter
   const FPS = 60
 
-  const density = ' .:░▒▓█Ñ#+-'.split('')
+  // Lorenz system. SPEED scales time so the pen can keep up; SUBSTEPS keeps
+  // the integration stable at that speed.
+  const SIGMA = 10, RHO = 28, BETA = 8 / 3
+  const SPEED = 0.4
+  const SUBSTEPS = 4
+  // The camera tumbles around the attractor at two incommensurate rates, so
+  // the projected shape never repeats. Radians per second.
+  const SPIN_A = 0.11
+  const SPIN_B = 0.07
+  // Per-axis envelope: how fast the fitted extents relax, and their floor.
+  const ENV_DECAY = 0.9995
+  const ENV_FLOOR = 8
+  // The flow is densest near its centre; a gamma below 1 pushes it outward
+  // so the point spends its time across the whole strip, not the middle.
+  const GAMMA = 0.6
+  const MARGIN = 2         // Cells of breathing room on every side of the region
+  const MIN_REGION = 30    // Cells; below this the margin is too thin to bother
 
-  // No cursor to follow, or the reader asked for stillness.
-  if (!window.matchMedia('(hover: hover)').matches) return
+  const density = ' .:░▒▓█Ñ#+-'.split('')
+  // Density levels at or below this are the comet tail and take the accent.
+  const TAIL_LEVEL = 2
+
+  // The reader asked for stillness.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
   const el = document.createElement('pre')
@@ -27,38 +46,47 @@
   let cols = 0, rows = 0, cellW = 0, cellH = 0, aspect = 1
   let buffer = new Float32Array(0)
 
-  const cursor = { x: 0, y: 0 }
+  // The region of the grid the point may roam, in cells.
+  const region = { x0: 0, y0: 0, x1: 0, y1: 0 }
 
-  // Cursor and pen state in pixels, carried across page loads so the pen picks
-  // up mid-stroke instead of flying in from the centre or stopping dead.
+  // The point the pen chases, in cells.
+  const target = { x: 0, y: 0 }
+
+  // Attractor state. Start slightly off the origin so the flow picks up.
+  const lorenz = { x: 0.1, y: 0, z: 0 }
+  // Camera angles and the running extents of the projection.
+  const cam = { a: 0, b: 0 }
+  const env = { x: ENV_FLOOR, y: ENV_FLOOR }
+
+  // Everything carried across page loads so the stroke reads as one motion.
   const STORE_KEY = 'dyna-state'
-  const pointer = { x: NaN, y: NaN }
   let saved = null
   try {
     const s = JSON.parse(sessionStorage.getItem(STORE_KEY))
-    if (s && isFinite(s.cx) && isFinite(s.cy)) {
-      saved = s
-      pointer.x = s.cx
-      pointer.y = s.cy
-    }
+    if (s && [s.lx, s.ly, s.lz].every(isFinite)) saved = s
   } catch (_) {}
 
   function remember() {
-    if (!isFinite(pointer.x) || !cellW || !cellH) return
-    // Quantise the trail to one byte per cell so it fits comfortably in storage.
+    if (!cellW || !cellH) return
     let trail = ''
     for (let i = 0; i < buffer.length; i++) {
       trail += String.fromCharCode(Math.round(Math.min(1, Math.max(0, buffer[i])) * 255))
     }
     const state = {
       t: performance.timeOrigin + performance.now(),
-      cx: pointer.x, cy: pointer.y,
+      lx: lorenz.x, ly: lorenz.y, lz: lorenz.z,
+      ca: cam.a, cb: cam.b, ex: env.x, ey: env.y,
       px: dyna.pos.x * cellW, py: dyna.pos.y * cellH,
       vx: dyna.vel.x * cellW, vy: dyna.vel.y * cellH,
       cols, rows, trail,
     }
     try { sessionStorage.setItem(STORE_KEY, JSON.stringify(state)) } catch (_) {}
   }
+
+  window.addEventListener('pagehide', remember)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') remember()
+  })
 
   // One cell, measured off the element itself so it tracks the real font.
   function measure() {
@@ -72,6 +100,20 @@
     probe.remove()
   }
 
+  // The empty strip between the content column and the window edge.
+  function locateRegion() {
+    const outer = document.querySelector('.site-outer')
+    const right = outer ? outer.getBoundingClientRect().right : 0
+    region.x0 = Math.ceil(right / cellW) + MARGIN
+    region.x1 = cols - MARGIN
+    region.y0 = MARGIN
+    region.y1 = rows - MARGIN
+  }
+
+  function regionUsable() {
+    return region.x1 - region.x0 >= MIN_REGION && region.y1 - region.y0 >= MIN_REGION
+  }
+
   function resize() {
     measure()
     if (!cellW || !cellH) return
@@ -79,21 +121,9 @@
     rows = Math.ceil(window.innerHeight / cellH)
     aspect = cellW / cellH
     buffer = new Float32Array(cols * rows)
+    locateRegion()
+    el.style.display = regionUsable() ? '' : 'none'
   }
-
-  window.addEventListener('pointermove', (e) => {
-    pointer.x = e.clientX
-    pointer.y = e.clientY
-    if (!cellW || !cellH) return
-    cursor.x = e.clientX / cellW
-    cursor.y = e.clientY / cellH
-  })
-
-  // Links and refreshes both fire pagehide; that's the moment to save.
-  window.addEventListener('pagehide', remember)
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') remember()
-  })
 
   window.addEventListener('resize', resize)
 
@@ -107,9 +137,9 @@
       this.mass = mass
       this.damp = damp
     }
-    update(cursor) {
-      const fx = cursor.x - this.pos.x
-      const fy = cursor.y - this.pos.y
+    update(target) {
+      const fx = target.x - this.pos.x
+      const fy = target.y - this.pos.y
       this.vel.x = (this.vel.x + fx / this.mass) * this.damp
       this.vel.y = (this.vel.y + fy / this.mass) * this.damp
       this.pre.x = this.pos.x
@@ -120,6 +150,57 @@
   }
 
   const dyna = new Dyna(MASS, DAMP)
+
+  // -----------------------------------------------------------------------------
+  // Lorenz attractor, integrated with RK4 and projected onto the x–z plane,
+  // which is the classic butterfly. x spans roughly [-20, 20], z [0, 50].
+
+  function lorenzDeriv(s) {
+    return {
+      x: SIGMA * (s.y - s.x),
+      y: s.x * (RHO - s.z) - s.y,
+      z: s.x * s.y - BETA * s.z,
+    }
+  }
+
+  function lorenzStep(dt) {
+    const s = lorenz
+    const k1 = lorenzDeriv(s)
+    const k2 = lorenzDeriv({ x: s.x + k1.x * dt / 2, y: s.y + k1.y * dt / 2, z: s.z + k1.z * dt / 2 })
+    const k3 = lorenzDeriv({ x: s.x + k2.x * dt / 2, y: s.y + k2.y * dt / 2, z: s.z + k2.z * dt / 2 })
+    const k4 = lorenzDeriv({ x: s.x + k3.x * dt, y: s.y + k3.y * dt, z: s.z + k3.z * dt })
+    s.x += (k1.x + 2 * k2.x + 2 * k3.x + k4.x) * dt / 6
+    s.y += (k1.y + 2 * k2.y + 2 * k3.y + k4.y) * dt / 6
+    s.z += (k1.z + 2 * k2.z + 2 * k3.z + k4.z) * dt / 6
+  }
+
+  // Advance one frame and map the attractor into the region.
+  function moveTarget() {
+    const dt = SPEED / FPS / SUBSTEPS
+    for (let i = 0; i < SUBSTEPS; i++) lorenzStep(dt)
+    cam.a += SPIN_A / FPS
+    cam.b += SPIN_B / FPS
+
+    // Centre the attractor, then view it from a slowly tumbling camera.
+    const x = lorenz.x, y = lorenz.y, z = lorenz.z - RHO + 1
+    const ca = Math.cos(cam.a), sa = Math.sin(cam.a)
+    const cb = Math.cos(cam.b), sb = Math.sin(cam.b)
+    const x1 = x * ca + z * sa          // rotate about y
+    const z1 = -x * sa + z * ca
+    const u = x1
+    const v = y * cb - z1 * sb          // rotate about x
+
+    // Stretch each axis on its own so the shape fills the strip. The envelope
+    // jumps up instantly and relaxes slowly, so the point never leaves.
+    env.x = Math.max(env.x * ENV_DECAY, Math.abs(u), ENV_FLOOR)
+    env.y = Math.max(env.y * ENV_DECAY, Math.abs(v), ENV_FLOOR)
+
+    const spread = (n) => Math.sign(n) * Math.pow(Math.abs(n), GAMMA)
+    const w = region.x1 - region.x0
+    const h = region.y1 - region.y0
+    target.x = region.x0 + w / 2 + spread(u / env.x) * (w / 2)
+    target.y = region.y0 + h / 2 + spread(v / env.y) * (h / 2)
+  }
 
   // -----------------------------------------------------------------------------
   // Bresenham's line algorithm
@@ -164,7 +245,8 @@
 
   // Stamp the pen along the segment it just travelled.
   function pre() {
-    dyna.update(cursor)
+    moveTarget()
+    dyna.update(target)
 
     const points = line(dyna.pos, dyna.pre)
 
@@ -186,21 +268,30 @@
     }
   }
 
-  // Just a renderer
+  // Just a renderer. Runs of tail characters are wrapped so they can take
+  // the accent colour while the body of the pen keeps the base colour.
   const out = []
   function main() {
     let n = 0
+    let inTail = false
     for (let j = 0; j < rows; j++) {
       for (let i = 0; i < cols; i++) {
         const idx = i + cols * j
         const v = smoothstep(0, 0.9, buffer[idx])
-        buffer[idx] *= 0.99
-        out[n++] = density[Math.floor(v * (density.length - 1))]
+        buffer[idx] *= DECAY
+        const level = Math.floor(v * (density.length - 1))
+        const tail = level > 0 && level <= TAIL_LEVEL
+        if (tail !== inTail) {
+          out[n++] = tail ? '<span class="tail">' : '</span>'
+          inTail = tail
+        }
+        out[n++] = density[level]
       }
+      if (inTail) { out[n++] = '</span>'; inTail = false }
       out[n++] = '\n'
     }
     out.length = n
-    el.textContent = out.join('')
+    el.innerHTML = out.join('')
   }
 
   let last = 0
@@ -210,20 +301,26 @@
     requestAnimationFrame(frame)
     if (t - last < interval - 1) return
     last = t
-    if (!cols || !rows) return
+    if (!cols || !rows || !regionUsable()) return
     pre()
     main()
   }
 
   resize()
-  // Resume the previous page's stroke: cursor, pen position and pen velocity.
-  // On the first page of the session everything rests at the centre.
+
   if (saved && cellW && cellH) {
-    cursor.x = saved.cx / cellW
-    cursor.y = saved.cy / cellH
+    // Resume the previous page's stroke: attractor, pen position and velocity.
+    lorenz.x = saved.lx
+    lorenz.y = saved.ly
+    lorenz.z = saved.lz
+    if (isFinite(saved.ca)) cam.a = saved.ca
+    if (isFinite(saved.cb)) cam.b = saved.cb
+    if (isFinite(saved.ex)) env.x = saved.ex
+    if (isFinite(saved.ey)) env.y = saved.ey
+    moveTarget()
     const hasPen = [saved.px, saved.py, saved.vx, saved.vy].every(isFinite)
-    dyna.pos.x = hasPen ? saved.px / cellW : cursor.x
-    dyna.pos.y = hasPen ? saved.py / cellH : cursor.y
+    dyna.pos.x = hasPen ? saved.px / cellW : target.x
+    dyna.pos.y = hasPen ? saved.py / cellH : target.y
     dyna.vel.x = hasPen ? saved.vx / cellW : 0
     dyna.vel.y = hasPen ? saved.vy / cellH : 0
 
@@ -247,12 +344,15 @@
       const missed = Math.min(FPS * 2, Math.max(0, Math.round(elapsed / interval)))
       for (let k = 0; k < missed; k++) {
         pre()
-        for (let i = 0; i < buffer.length; i++) buffer[i] *= 0.99
+        for (let i = 0; i < buffer.length; i++) buffer[i] *= DECAY
       }
     }
   } else {
-    cursor.x = dyna.pos.x = cols / 2
-    cursor.y = dyna.pos.y = rows / 2
+    // First page of the session: let the flow settle onto the attractor and
+    // the envelopes find its size, then drop the pen right on the point.
+    for (let k = 0; k < FPS * 10; k++) moveTarget()
+    dyna.pos.x = target.x
+    dyna.pos.y = target.y
   }
   dyna.pre.x = dyna.pos.x
   dyna.pre.y = dyna.pos.y

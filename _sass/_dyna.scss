@@ -12,6 +12,11 @@
   color: var(--dyna-color);
   pointer-events: none;
   user-select: none;
+
+  // The comet tail: the faint characters left behind as the glow fades.
+  .tail {
+    color: var(--dyna-tail);
+  }
 }
 
 // Keep the page above the trail.
