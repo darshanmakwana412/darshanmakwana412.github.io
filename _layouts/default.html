@@ -5,6 +5,7 @@
     <div class="site-outer">
       <header class="site-header">
         <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+        <div class="ascii-noise-wrap" aria-hidden="true"><pre id="ascii-noise" class="ascii-noise"></pre></div>
       </header>
       <div class="site-body">
         {%- include sidebar.html -%}
@@ -13,6 +14,8 @@
         </main>
       </div>
     </div>
+    <script src="{{ "/assets/js/simplex-noise.js" | relative_url }}"></script>
+    <script src="{{ "/assets/js/noise-header.js" | relative_url }}"></script>
     <script src="{{ "/assets/js/dark-mode.js" | relative_url }}"></script>
   </body>
 </html>

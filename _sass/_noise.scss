@@ -1,0 +1,35 @@
+// ASCII noise band that fills the header to the right of the site title.
+.ascii-noise-wrap {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: stretch;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  margin-left: 1.25rem;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ascii-noise {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: hidden;
+  white-space: pre;
+  font-family: Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+  font-size: 8px;
+  line-height: 8px;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .ascii-noise-wrap {
+    grid-column: 2;
+    margin-left: 0.75rem;
+  }
+}
