@@ -28,8 +28,10 @@
   // The flow is densest near its centre; a gamma below 1 pushes it outward
   // so the point spends its time across the whole strip, not the middle.
   const GAMMA = 0.6
-  const MARGIN = 2         // Cells of breathing room on every side of the region
-  const MIN_REGION = 30    // Cells; below this the margin is too thin to bother
+  // The target stays this far inside the strip so the pen's body, RADIUS
+  // cells either side, never reaches the text or the window edge.
+  const MARGIN = RADIUS + 1
+  const MIN_REGION = 8     // Cells of roaming room; below this, hide the trail
 
   const density = ' .:░▒▓█Ñ#+-'.split('')
   // Density levels at or below this are the comet tail and take the accent.
@@ -111,7 +113,7 @@
   }
 
   function regionUsable() {
-    return region.x1 - region.x0 >= MIN_REGION && region.y1 - region.y0 >= MIN_REGION
+    return region.x1 - region.x0 >= MIN_REGION && region.y1 - region.y0 >= MIN_REGION * 2
   }
 
   function resize() {
