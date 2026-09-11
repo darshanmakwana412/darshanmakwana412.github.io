@@ -16,6 +16,7 @@
   flex: 1 1 auto;
   min-height: 0;
   margin-top: 0.5rem;
+  margin-right: $noise-gutter; // same right edge as the header band left of the title
 }
 
 .ascii-noise {

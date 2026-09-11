@@ -1,5 +1,8 @@
 $line: 1px solid var(--border-color);
 $sidebar-width: 130px;
+// Gap the ascii noise keeps from the text: the title's knockout padding and the
+// sidebar band's right inset both use it, so the two bands end on the same line.
+$noise-gutter: 0.65rem;
 
 .site-outer {
   width: #{"min(100%, #{$usable-width + $sidebar-width + 2 * $spacing-unit})"};
@@ -31,8 +34,8 @@ $sidebar-width: 130px;
   z-index: 1;
   display: flex;
   align-items: center;
-  margin: -0.5rem 0 -0.5rem -0.4em; // cover the header padding; keep the text aligned with the content
-  padding: 0.5rem 0.4em;
+  margin: -0.5rem 0 -0.5rem (-$noise-gutter); // cover the header padding; keep the text aligned with the content
+  padding: 0.5rem $noise-gutter;
   background: var(--bg-color);
   @include relative-font-size(1.625);
   font-weight: bold;
