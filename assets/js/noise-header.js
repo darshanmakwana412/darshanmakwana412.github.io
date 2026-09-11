@@ -8,11 +8,17 @@
   var wraps = Array.prototype.slice.call(document.querySelectorAll('.ascii-noise-wrap'));
   if (!wraps.length || typeof openSimplexNoise !== 'function') return;
 
-  var noise3D = openSimplexNoise(Date.now()).noise3D;
+  // A fixed seed and a wall-clock time base make the field identical on every
+  // page, so following a link or refreshing does not restart the animation.
+  var SEED = 20260911;
+  var EPOCH = Date.UTC(2026, 0, 1);
+  var noise3D = openSimplexNoise(SEED).noise3D;
   var density = ' .:░▒▓█Ñ#+-'.split('');
   var SCALE = 0.08;          // spatial frequency, in cells
   var SPEED = 0.0005;        // time scale, per ms
   var FRAME_MS = 1000 / 30;  // cap at ~30fps; the noise moves slowly anyway
+
+  function wallTime() { return Date.now() - EPOCH; }
 
   var reduceMotion = window.matchMedia
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -83,7 +89,7 @@
     rafId = requestAnimationFrame(loop);
     if (now - lastFrame < FRAME_MS) return;
     lastFrame = now;
-    renderAll(now);
+    renderAll(wallTime());
   }
 
   function syncLoop() {
@@ -100,7 +106,7 @@
   }
 
   measure();
-  renderAll(performance.now());
+  renderAll(wallTime());
 
   if (reduceMotion) return; // one static frame is enough
 
@@ -112,7 +118,7 @@
     requestAnimationFrame(function () {
       pending = false;
       measure();
-      renderAll(performance.now());
+      renderAll(wallTime());
     });
   }
   if (typeof ResizeObserver === 'function') {
