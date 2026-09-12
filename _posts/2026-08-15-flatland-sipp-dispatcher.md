@@ -315,6 +315,7 @@ Behaviour is controlled by environment-variable knobs, all defaulting to the mea
 
 **References:**
 1. [ECML 2026 Flatland Real-World Baselines Challenge](https://competition.flatland.cloud)
-2. [Flatland environment and evaluation code (flatland-rl)](https://github.com/flatland-association/flatland-rl)
-3. [Phillips and Likhachev, *SIPP: Safe Interval Path Planning for Dynamic Environments*, ICRA 2011](https://www.cs.cmu.edu/~maxim/files/sipp_icra11.pdf)
-4. [Silver, *Cooperative Pathfinding* (prioritized planning with reservation tables), AIIDE 2005](https://www.davidsilver.uk/wp-content/uploads/2020/03/coop-path-AIIDEo5.pdf)
+2. [Meyer et al., *Real-World Baselines Challenge: Dynamic Train Rescheduling under Stochastic Perturbations*, ECML PKDD 2026 Discovery Challenge](https://flatland-association.github.io/flatland-book/_downloads/348b3e1efb2f66fc5a39bc6a33d6d56d/Real_World_Baselines_Challenge__Dynamic_Train_Rescheduling_under_Stochastic_Perturbations.pdf)
+3. [Flatland environment and evaluation code (flatland-rl)](https://github.com/flatland-association/flatland-rl)
+4. [Phillips and Likhachev, *SIPP: Safe Interval Path Planning for Dynamic Environments*, ICRA 2011](https://www.cs.cmu.edu/~maxim/files/sipp_icra11.pdf)
+5. [Silver, *Cooperative Pathfinding* (prioritized planning with reservation tables), AIIDE 2005](https://www.davidsilver.uk/wp-content/uploads/2020/03/coop-path-AIIDEo5.pdf)
