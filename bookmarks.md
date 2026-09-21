@@ -6,6 +6,7 @@ title: Bookmarks
 
 Interesting things I've read on the internet
 
+- [Conducting effective negotiations](https://www.youtube.com/watch?v=rCmvMDrCWjs&t=510s)
 - [On Really Trying](https://gwern.net/on-really-trying)
 - [Converting Rejections into Positive Stimuli](https://gwern.net/doc/psychology/writing/2014-rubin.pdf)
 - [Generative Recursive Reasoning](https://ahn-ml.github.io/gram-website/)
