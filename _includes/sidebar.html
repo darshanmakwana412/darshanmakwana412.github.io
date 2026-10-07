@@ -8,6 +8,7 @@
     {%- assign is_blog_page = true -%}
   {%- endif -%}
   {%- for item in site.data.sidebar -%}
+  {%- if item.url == "/about/" -%}{%- continue -%}{%- endif -%}
   {%- assign is_active = false -%}
   {%- if page.url == item.url -%}
     {%- assign is_active = true -%}
