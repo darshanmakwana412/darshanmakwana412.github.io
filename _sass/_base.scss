@@ -131,7 +131,7 @@ td.code {
   clear: both;
 }
 
-table:not(.post-table):not(.rouge-table) {
+table:not(.post-table):not(.rouge-table):not(.run-log) {
   color: var(--text-color);
   width: 100%;
   text-align: left;
@@ -148,6 +148,57 @@ table:not(.post-table):not(.rouge-table) {
   }
   tr:nth-child(even) {
     background-color: var(--table-stripe);
+  }
+}
+
+// Running page: big totals above a quiet list, numbers lined up in columns
+.run-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin: 0.75rem 0 1rem;
+
+  b {
+    display: block;
+    @include relative-font-size(1.625);
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+
+  span {
+    color: var(--text-muted);
+    font-size: $small-font-size;
+  }
+}
+
+.run-log {
+  border-collapse: collapse;
+  margin-bottom: $spacing-unit;
+  font-variant-numeric: tabular-nums;
+
+  th, td {
+    text-align: right;
+    padding: 0.15rem 0 0.15rem 1.75rem;
+    white-space: nowrap;
+  }
+
+  th:first-child, td:first-child {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  th {
+    font-weight: normal;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  td:first-child {
+    color: var(--text-muted);
+  }
+
+  tbody tr:hover td {
+    color: var(--link-color);
   }
 }
 

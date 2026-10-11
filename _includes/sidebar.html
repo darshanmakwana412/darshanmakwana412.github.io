@@ -16,7 +16,7 @@
     {%- assign is_active = true -%}
   {%- endif -%}
   <a href="{{ item.url }}" class="sidebar-link{% if is_active %} active{% endif %}">
-    {%- if item.title == "Bookshelf" -%}Books{%- else -%}{{ item.title }}{%- endif -%}
+    {{- item.title -}}
   </a>
   {%- endfor -%}
   <div class="ascii-noise-wrap ascii-noise-wrap--sidebar" aria-hidden="true"><pre class="ascii-noise"></pre></div>
